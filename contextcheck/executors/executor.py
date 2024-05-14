@@ -1,9 +1,19 @@
-from contextcheck.models.models import TestScenario
+from contextcheck.endpoints.endpoint_openai import EndpointOpenAI
+from contextcheck.models.models import TestResult, TestScenario, TestStep
 
 
 class Executor:
     def __init__(self) -> None:
-        pass
+        self.endpoint_under_test = EndpointOpenAI()
 
     def run(self, test_scenario: TestScenario) -> None:
-        print(test_scenario)
+        for test_step in test_scenario.steps:
+            self._run_step(test_step)
+
+    def _run_step(self, test_step: TestStep) -> TestResult:
+        message = self.endpoint_under_test.prepare_message(test_step)
+        print(message)
+        ret = self.endpoint_under_test.send_message(message)
+        print(ret)
+
+        return TestResult(passed=True)

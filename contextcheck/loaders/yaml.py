@@ -9,5 +9,4 @@ def load_yaml_file(file_path: Path) -> dict:
 
     with open(file_path, "r") as file:
         yaml_dict = yaml.safe_load(file)
-    print(yaml_dict)
     return yaml_dict

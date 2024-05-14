@@ -16,6 +16,15 @@ class TestStep(BaseModel):
     name: str
     message: str | None = None
 
+    @classmethod
+    def from_obj(cls, obj) -> Self:
+        if type(obj) is str:
+            return cls(name=obj)
+        elif type(obj) is dict:
+            return cls.model_validate(obj)
+        else:
+            raise ValueError("Test step in a wrong format!")
+
     @model_validator(mode="after")
     def set_message_if_not_provided(self) -> Self:
         if not self.message:
@@ -24,6 +33,7 @@ class TestStep(BaseModel):
 
 
 class TestScenario(BaseModel):
+    __test__ = False
     steps: list[TestStep] = []
     config: TestConfig
 
@@ -35,15 +45,9 @@ class TestScenario(BaseModel):
     @classmethod
     def populate_steps(cls, data: Any) -> Any:
         assert "steps" in data, "No steps provided!"
-        steps = []
-        for step_obj in data["steps"]:
-            if type(step_obj) is str:
-                step = TestStep(name=step_obj)
-            elif type(step_obj) is dict:
-                step = TestStep.model_validate(step_obj)
-            else:
-                raise ValueError("Test step in a wrong format!")
-            steps.append(step)
-
-        data["steps"] = steps
+        data["steps"] = [TestStep.from_obj(step) for step in data["steps"]]
         return data
+
+
+class TestResult(BaseModel):
+    passed: bool
