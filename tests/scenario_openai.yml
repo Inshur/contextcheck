@@ -1,0 +1,10 @@
+config:
+   endpoint_under_test:
+      kind: openai
+
+
+steps:
+   - "Write success in the response"
+   - name: Send hello
+     message: "Hello!"
+

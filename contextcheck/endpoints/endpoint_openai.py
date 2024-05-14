@@ -1,6 +1,5 @@
-from typing import Callable, Self
+from typing import Callable, ClassVar, Self
 
-from contextcheck.connectors.connector import ConnectorBase
 from contextcheck.connectors.connector_openai import ConnectorOpenAI
 from contextcheck.endpoints.endpoint import EndpointBase
 from contextcheck.models.messages import MessageBase, ResponseBase, ResponseStats
@@ -33,8 +32,10 @@ class ResponseOpenAI(ResponseBase):
 
 
 class EndpointOpenAI(EndpointBase):
-    def __init__(self) -> None:
-        super().__init__()
+    kind: ClassVar[str] = "openai"
+
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
         self._message_class = MessageOpenAI
         self._response_class = ResponseOpenAI
         self.prepare_message: Callable = self._message_class.from_test_step

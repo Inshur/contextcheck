@@ -3,13 +3,17 @@ from typing import Annotated, Any, Self
 
 from pydantic import AfterValidator, AnyUrl, BaseModel, model_validator
 
+from contextcheck.endpoints.endpoint import EndpointConfig
 from contextcheck.loaders.yaml import load_yaml_file
 
 
 class TestConfig(BaseModel):
-    endpoint_url: Annotated[AnyUrl, AfterValidator(str)]
-    additional_headers: dict | None = {}
-    request_format: str | None = None
+    endpoint_under_test: EndpointConfig = EndpointConfig()
+
+    @model_validator(mode="before")
+    @classmethod
+    def handle_none(cls, data: Any) -> Any:
+        return data if data else {}
 
 
 class TestStep(BaseModel):
