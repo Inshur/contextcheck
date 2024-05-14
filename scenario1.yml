@@ -1,0 +1,23 @@
+config:
+	test_endpoint: http://asdasd
+	additional_headers: "aaaa"
+	request_format: "template"
+
+prompts:
+	- template1
+		template: "bleble {variable1}"
+	- template2
+		template_file: "prompt2.txt"
+
+steps:
+	- Write success in the response
+		assert_has: "success"
+	- s2
+		message: "List all airports in Denver"
+		assert_has: ["KDEV", "KDNV", "pax_count: 12"]
+		variable1: "moja zmienna1"
+
+  - "Pick 3rd one as arrival"
+
+
+

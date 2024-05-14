@@ -1,0 +1,9 @@
+config:
+   endpoint_url: "http://0.0.0.0:8000/api/v1/"
+   additional_headers: 
+
+steps:
+   - "Write success in the response"
+   - name: Send hello
+     message: "Hello!"
+
