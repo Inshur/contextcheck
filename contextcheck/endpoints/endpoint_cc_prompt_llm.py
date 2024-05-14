@@ -14,8 +14,7 @@ class Message(MessageBase):
         return cls(prompt=test_step.message)
 
     def to_dict(self) -> dict:
-        d = {"prompt": self.prompt}
-        return d
+        return {"prompt": self.prompt}
 
 
 class Response(ResponseBase):
@@ -29,17 +28,13 @@ class Response(ResponseBase):
 
 class EndpointCCPromptLLM(EndpointBase):
     kind: ClassVar[str] = "cc_prompt_llm"
+    prepare_message: Callable = Message.from_test_step
 
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self._message_class = Message
-        self._response_class = Response
-        self.prepare_message: Callable = self._message_class.from_test_step
-        self._connector: ConnectorHTTP = ConnectorHTTP(
-            url=self.config.url, additional_headers=self.config.additional_headers
-        )
+    @property
+    def _connector(self) -> ConnectorHTTP:
+        return ConnectorHTTP(url=self.config.url, additional_headers=self.config.additional_headers)
 
     def send_message(self, message: Message) -> ResponseBase:
         response_dict = self._connector.send(message.to_dict())
-        response = self._response_class.from_dict(response_dict)
+        response = Response.from_dict(response_dict)
         return response

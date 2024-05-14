@@ -1,9 +1,7 @@
-from typing import Annotated, ClassVar, Literal
+from typing import Annotated, ClassVar
 
 from openai import BaseModel
 from pydantic import AfterValidator, AnyUrl
-
-from contextcheck.connectors.connector import ConnectorBase
 
 
 class EndpointConfig(BaseModel):

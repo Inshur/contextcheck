@@ -6,7 +6,7 @@ from contextcheck.models.messages import MessageBase, ResponseBase, ResponseStat
 from contextcheck.models.models import TestStep
 
 
-class MessageOpenAI(MessageBase):
+class Message(MessageBase):
     message_system: str | None = None
     message_user: str | None = None
 
@@ -15,11 +15,10 @@ class MessageOpenAI(MessageBase):
         return cls(message_user=test_step.message)
 
     def to_dict(self) -> dict:
-        d = {"role": "user", "content": self.message_user}
-        return d
+        return {"role": "user", "content": self.message_user}
 
 
-class ResponseOpenAI(ResponseBase):
+class Response(ResponseBase):
     @classmethod
     def from_dict(cls, data: dict) -> Self:
         message = data["choices"][0]["message"]["content"]
@@ -33,15 +32,10 @@ class ResponseOpenAI(ResponseBase):
 
 class EndpointOpenAI(EndpointBase):
     kind: ClassVar[str] = "openai"
+    prepare_message: Callable = Message.from_test_step
+    _connector: ConnectorOpenAI = ConnectorOpenAI()
 
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self._message_class = MessageOpenAI
-        self._response_class = ResponseOpenAI
-        self.prepare_message: Callable = self._message_class.from_test_step
-        self._connector: ConnectorOpenAI = ConnectorOpenAI()
-
-    def send_message(self, message: MessageOpenAI) -> ResponseBase:
+    def send_message(self, message: Message) -> ResponseBase:
         response_dict = self._connector.send(message.to_dict())
-        response = self._response_class.from_dict(response_dict)
+        response = Response.from_dict(response_dict)
         return response

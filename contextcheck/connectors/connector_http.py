@@ -1,5 +1,3 @@
-from typing import Self
-
 import requests
 
 from contextcheck.connectors.connector import ConnectorBase
