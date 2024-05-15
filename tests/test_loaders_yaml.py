@@ -15,3 +15,10 @@ def test_load_scenario0():
 def test_load_scenario01():
     ts = TestScenario.from_yaml(Path("tests/scenario_openai.yml"))
     assert len(ts.steps) == 2
+
+
+def test_load_variables():
+    ts = TestScenario.from_yaml(Path("tests/scenario_tg_1.yml"))
+
+    assert ts.steps[1].message.chat_uuid == "123e4567-e89b-12d3-a456-426614174000"
+    assert ts.steps[1].message.asr_build == "{}"

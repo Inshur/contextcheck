@@ -1,0 +1,21 @@
+config:
+   endpoint_under_test:
+      kind: tg_chatbot
+      url: "http://127.0.0.1:8000/api/v1/qa/prompt_llm"
+      additional_headers: 
+         tesettest: testtests
+     
+
+steps:
+   - "Write success in the response"
+   - name: Send hello
+     message: 
+        message: "Hello!"
+        chat_uuid: "{{ chat_uuid }}"
+        asr_build: "{{ asr_build }}"    
+        sender_name: "John Doe"
+
+variables:
+   chat_uuid: "123e4567-e89b-12d3-a456-426614174000"
+   asr_build: "{}"
+

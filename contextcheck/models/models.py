@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Annotated, Any, Self
 
-from pydantic import AfterValidator, AnyUrl, BaseModel, model_validator
+from pydantic import AfterValidator, AnyUrl, BaseModel, ConfigDict, model_validator
 
 from contextcheck.endpoints.endpoint import EndpointConfig
 from contextcheck.loaders.yaml import load_yaml_file
@@ -16,9 +16,15 @@ class TestConfig(BaseModel):
         return data if data else {}
 
 
+class MessagePrototype(BaseModel):
+    model_config = ConfigDict(
+        extra="allow",
+    )
+
+
 class TestStep(BaseModel):
     name: str
-    message: str | None = None
+    message: str | MessagePrototype | None = None
 
     @classmethod
     def from_obj(cls, obj) -> Self:
