@@ -11,7 +11,7 @@ class Message(MessageBase):
 
     @classmethod
     def from_test_step(cls, test_step: TestStep) -> Self:
-        return cls(prompt=test_step.message)
+        return cls(prompt=test_step.message.message)
 
     def to_dict(self) -> dict:
         return {"prompt": self.prompt}

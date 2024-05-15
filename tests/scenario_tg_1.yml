@@ -4,6 +4,9 @@ config:
       url: "http://127.0.0.1:8000/api/v1/qa/prompt_llm"
       additional_headers: 
          tesettest: testtests
+   default_message:
+      chat_uuid: "{{ chat_uuid }}"
+      sender_name: "{{ sender_name }}" 
      
 
 steps:
@@ -13,9 +16,16 @@ steps:
         message: "Hello!"
         chat_uuid: "{{ chat_uuid }}"
         asr_build: "{{ asr_build }}"    
-        sender_name: "John Doe"
+        sender_name: "{{ sender_name }}"  
+   - "[reset]"
+   - name: Send qa hello
+     message: 
+        message: "[qa] Hello!"
+        chat_uuid: "{{ chat_uuid }}"
+        sender_name: "{{ sender_name }}"  
 
 variables:
    chat_uuid: "123e4567-e89b-12d3-a456-426614174000"
    asr_build: "{}"
+   sender_name: "John Doe"
 

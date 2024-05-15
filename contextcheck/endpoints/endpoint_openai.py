@@ -12,7 +12,7 @@ class Message(MessageBase):
 
     @classmethod
     def from_test_step(cls, test_step: TestStep) -> Self:
-        return cls(message_user=test_step.message)
+        return cls(message_user=test_step.message.message)
 
     def to_dict(self) -> dict:
         return {"role": "user", "content": self.message_user}
