@@ -21,8 +21,6 @@ steps:
    - name: Send qa hello
      message: 
         message: "[qa] Hello!"
-        chat_uuid: "{{ chat_uuid }}"
-        sender_name: "{{ sender_name }}"  
 
 variables:
    chat_uuid: "123e4567-e89b-12d3-a456-426614174000"
