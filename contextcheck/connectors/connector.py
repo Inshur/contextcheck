@@ -1,10 +1,20 @@
-from typing import Self
+import time
 
 from openai import BaseModel
 
 
-class ConnectorBase(BaseModel):
+class ConnectorStats(BaseModel):
+    duration_context: float | None = None
 
-    @classmethod
-    def from_config_dict(d: dict) -> Self:
-        pass
+
+class ConnectorBase(BaseModel):
+    _stats: ConnectorStats = ConnectorStats()
+
+    def __enter__(self):
+        self._stats.duration_context = time.perf_counter()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self._stats.duration_context = (
+            time.perf_counter() - self._stats.duration_context
+        )

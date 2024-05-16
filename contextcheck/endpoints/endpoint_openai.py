@@ -19,8 +19,8 @@ class EndpointOpenAI(EndpointBase):
         def from_dict(cls, data: dict) -> Self:
             message = data["choices"][0]["message"]["content"]
             response_stats = ResponseStats(
-                tokens_message=data["usage"]["prompt_tokens"],
+                tokens_request=data["usage"]["prompt_tokens"],
                 tokens_response=data["usage"]["completion_tokens"],
                 tokens_total=data["usage"]["total_tokens"],
             )
-            return cls(message=message, stats=response_stats)
+            return cls(message=message, _stats=response_stats)

@@ -26,6 +26,8 @@ class EndpointBase(BaseModel):
 
     def send_request(self, req: RequestBase) -> ResponseBase:
         req = self.RequestModel(**req.model_dump())
-        response_dict = self._connector.send(req.render())
+        with self._connector as c:
+            response_dict = c.send(req.render())
+            response_dict["_stats"] = c._stats
         response = self.RequestModel(**response_dict)
         return response
