@@ -12,4 +12,5 @@ class RequestBase(BaseModel):
 
     def render(self) -> dict:
         """Render request dict from the model"""
-        raise NotImplementedError("Request render method not implemented")
+        return self.model_dump()
+        # raise NotImplementedError("Request render method not implemented")

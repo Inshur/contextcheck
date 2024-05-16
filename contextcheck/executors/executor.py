@@ -15,7 +15,6 @@ class Executor:
 
     def _run_step(self, test_step: TestStep) -> TestResult:
         request = test_step.request
-        print(request)
         ret = self.endpoint_under_test.send_request(request)
         print(ret)
 

@@ -1,16 +1,17 @@
 config:
    endpoint_under_test:
       kind: tg_chatbot
-      url: "http://127.0.0.1:8000/api/v1/qa/prompt_llm"
+      url: "http://0.0.0.0:8033/api/v1/asr-chat"
       additional_headers: 
-         tesettest: testtests
+         X-API-KEY: a
    default_request:
       chat_uuid: "{{ chat_uuid }}"
       sender_name: "{{ sender_name }}" 
+      asr_build: "{{ asr_build }}"  
      
 
 steps:
-   - "Write success in the response"
+   # - "Write success in the response"
    - name: Send hello
      request: 
         message: "Hello!"
@@ -24,6 +25,8 @@ steps:
 
 variables:
    chat_uuid: "123e4567-e89b-12d3-a456-426614174000"
-   asr_build: "{}"
+   asr_build: 
+      itinerary: []
+         
    sender_name: "John Doe"
 
