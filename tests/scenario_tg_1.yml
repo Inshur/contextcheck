@@ -4,7 +4,7 @@ config:
       url: "http://127.0.0.1:8000/api/v1/qa/prompt_llm"
       additional_headers: 
          tesettest: testtests
-   default_message:
+   default_request:
       chat_uuid: "{{ chat_uuid }}"
       sender_name: "{{ sender_name }}" 
      
@@ -12,14 +12,14 @@ config:
 steps:
    - "Write success in the response"
    - name: Send hello
-     message: 
+     request: 
         message: "Hello!"
         chat_uuid: "{{ chat_uuid }}"
         asr_build: "{{ asr_build }}"    
         sender_name: "{{ sender_name }}"  
    - "[reset]"
    - name: Send qa hello
-     message: 
+     request: 
         message: "[qa] Hello!"
 
 variables:

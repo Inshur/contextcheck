@@ -2,17 +2,18 @@ from typing import Callable, ClassVar, Self
 
 from contextcheck.connectors.connector_openai import ConnectorOpenAI
 from contextcheck.endpoints.endpoint import EndpointBase
-from contextcheck.models.messages import MessageBase, ResponseBase, ResponseStats
 from contextcheck.models.models import TestStep
+from contextcheck.models.request import RequestBase
+from contextcheck.models.response import ResponseBase, ResponseStats
 
 
-class Message(MessageBase):
+class Message(RequestBase):
     message_system: str | None = None
     message_user: str | None = None
 
     @classmethod
     def from_test_step(cls, test_step: TestStep) -> Self:
-        return cls(message_user=test_step.message.message)
+        return cls(message_user=test_step.request.message)
 
     def to_dict(self) -> dict:
         return {"role": "user", "content": self.message_user}

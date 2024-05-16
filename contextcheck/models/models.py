@@ -13,7 +13,7 @@ class MessagePrototype(BaseModel):
         extra="allow",
     )
 
-    def __str__():
+    def __str__(self):
         return self.message
 
     @model_validator(mode="before")
@@ -29,7 +29,7 @@ class MessagePrototype(BaseModel):
 
 class TestConfig(BaseModel):
     endpoint_under_test: EndpointConfig = EndpointConfig()
-    default_message: MessagePrototype | None = None
+    default_request: MessagePrototype | None = None
 
     @model_validator(mode="before")
     @classmethod
@@ -39,23 +39,23 @@ class TestConfig(BaseModel):
 
 class TestStep(BaseModel):
     name: str
-    message: MessagePrototype
-    default_message: ClassVar[MessagePrototype] = MessagePrototype()
+    request: MessagePrototype
+    default_request: ClassVar[MessagePrototype] = MessagePrototype()
 
     @classmethod
     def from_obj(cls, obj) -> Self:
         if type(obj) is str:
-            return cls(name=obj, message=MessagePrototype(message=obj))
+            return cls(name=obj, request=MessagePrototype(message=obj))
         elif type(obj) is dict:
             return cls.model_validate(obj)
         else:
             raise ValueError("Test step in a wrong format!")
 
-    @field_validator("message")
+    @field_validator("request")
     @classmethod
-    def use_default_message(cls, msg: MessagePrototype) -> MessagePrototype:
-        msg = cls.default_message.model_copy(update=msg.model_dump())
-        return msg
+    def use_default_request(cls, req: MessagePrototype) -> MessagePrototype:
+        req = cls.default_request.model_copy(update=req.model_dump())
+        return req
 
     # @model_validator(mode="after")
     # def set_message_if_not_provided(self) -> Self:
@@ -73,8 +73,8 @@ class TestScenario(BaseModel):
     def from_yaml(cls, file_path: Path) -> Self:
         cls_dict = load_yaml_file(file_path)
         config = TestConfig.model_validate(cls_dict.get("config", {}))
-        if config.default_message:
-            TestStep.default_message = config.default_message
+        if config.default_request:
+            TestStep.default_request = config.default_request
         klass = cls.model_validate(cls_dict)
         return klass
 

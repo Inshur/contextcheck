@@ -2,16 +2,17 @@ from typing import Callable, ClassVar, Self
 
 from contextcheck.connectors.connector_http import ConnectorHTTP
 from contextcheck.endpoints.endpoint import EndpointBase
-from contextcheck.models.messages import MessageBase, ResponseBase, ResponseStats
 from contextcheck.models.models import TestStep
+from contextcheck.models.request import RequestBase
+from contextcheck.models.response import ResponseBase, ResponseStats
 
 
-class Message(MessageBase):
+class Message(RequestBase):
     prompt: str | None = None
 
     @classmethod
     def from_test_step(cls, test_step: TestStep) -> Self:
-        return cls(prompt=test_step.message.message)
+        return cls(prompt=test_step.request.message)
 
     def to_dict(self) -> dict:
         return {"prompt": self.prompt}
