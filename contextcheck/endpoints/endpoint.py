@@ -1,26 +1,31 @@
-from typing import Annotated, ClassVar
+from typing import Annotated
 
 from openai import BaseModel
 from pydantic import AfterValidator, AnyUrl
+
+from contextcheck.connectors.connector import ConnectorBase
+from contextcheck.models.request import RequestBase
+from contextcheck.models.response import ResponseBase
 
 
 class EndpointConfig(BaseModel):
     kind: str | None = "openai"
     endpoint_url: Annotated[AnyUrl, AfterValidator(str)] | None = None
     additional_headers: dict | None = {}
-    request_format: str | None = None
 
 
 class EndpointBase(BaseModel):
-    kind: ClassVar[str] = "base"
-    # connector: ConnectorBase
+    _connector: ConnectorBase = ConnectorBase()
     config: EndpointConfig = EndpointConfig()
 
+    class RequestModel(RequestBase):
+        pass
 
-def factory(endpoint_config: EndpointConfig) -> EndpointBase:
-    kind = endpoint_config.kind
-    try:
-        ep_cls = next(cls for cls in EndpointBase.__subclasses__() if cls.kind == kind)
-    except StopIteration:
-        raise ValueError("No endpoint for this kind of config.")
-    return ep_cls(config=endpoint_config)
+    class ResponseModel(ResponseBase):
+        pass
+
+    def send_request(self, req: RequestBase) -> ResponseBase:
+        req = self.RequestModel(**req.model_dump())
+        response_dict = self._connector.send(req.render())
+        response = self.RequestModel(**response_dict)
+        return response

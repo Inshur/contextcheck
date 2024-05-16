@@ -1,12 +1,15 @@
-from typing import Self
-
-from pydantic import BaseModel
-
-from contextcheck.models.models import TestStep
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class RequestBase(BaseModel):
+    model_config = ConfigDict(extra="allow")
+    message: str | None = None
 
+    @model_validator(mode="before")
     @classmethod
-    def from_test_step(cls, test_step: TestStep) -> Self:
-        raise NotImplementedError("This method should be implemented!")
+    def from_obj(cls, obj: str | dict) -> dict:
+        return obj if type(obj) is dict else {"message": obj}
+
+    def render(self) -> dict:
+        """Render request dict from the model"""
+        raise NotImplementedError("Request render method not implemented")
