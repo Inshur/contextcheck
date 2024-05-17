@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class ResponseStats(BaseModel):
@@ -8,5 +8,6 @@ class ResponseStats(BaseModel):
 
 
 class ResponseBase(BaseModel):
-    message: str | None
+    model_config = ConfigDict(extra="allow")
+    message: str | None = None
     _stats: ResponseStats = ResponseStats()

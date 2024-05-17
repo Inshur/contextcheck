@@ -1,3 +1,5 @@
+from typing import Self
+
 from contextcheck.endpoints.factory import factory as endpoint_factory
 from contextcheck.models.models import TestResult, TestScenario, TestStep
 
@@ -9,13 +11,13 @@ class Executor:
             self.test_scenario.config.endpoint_under_test
         )
 
-    def run(self) -> None:
+    def run(self) -> TestStep:
         for test_step in self.test_scenario.steps:
-            self._run_step(test_step)
+            test_step = self._run_step(test_step)
+            yield test_step
 
-    def _run_step(self, test_step: TestStep) -> TestResult:
+    def _run_step(self, test_step: TestStep) -> TestStep:
         request = test_step.request
-        ret = self.endpoint_under_test.send_request(request)
-        print(ret)
-
-        return TestResult(passed=True)
+        response = self.endpoint_under_test.send_request(request)
+        test_step.response = response
+        return test_step

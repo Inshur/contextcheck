@@ -10,8 +10,8 @@ from contextcheck.models.response import ResponseBase
 
 class EndpointConfig(BaseModel):
     kind: str | None = "openai"
-    endpoint_url: Annotated[AnyUrl, AfterValidator(str)] | None = None
-    additional_headers: dict | None = {}
+    # endpoint_url: Annotated[AnyUrl, AfterValidator(str)] | None = None
+    # additional_headers: dict | None = {}
 
 
 class EndpointBase(BaseModel):
@@ -29,5 +29,5 @@ class EndpointBase(BaseModel):
         with self._connector as c:
             response_dict = c.send(req.render())
             response_dict["_stats"] = c._stats
-        response = self.RequestModel(**response_dict)
+        response = self.ResponseModel(**response_dict)
         return response

@@ -11,6 +11,7 @@ from pydantic import (
 from contextcheck.endpoints.endpoint import EndpointConfig
 from contextcheck.loaders.yaml import load_yaml_file
 from contextcheck.models.request import RequestBase
+from contextcheck.models.response import ResponseBase
 
 
 class TestConfig(BaseModel):
@@ -21,6 +22,7 @@ class TestConfig(BaseModel):
 class TestStep(BaseModel):
     name: str
     request: RequestBase
+    response: ResponseBase | None = None
     default_request: ClassVar[RequestBase] = RequestBase()
 
     @model_validator(mode="before")
@@ -55,5 +57,5 @@ class TestScenario(BaseModel):
         return klass
 
 
-class TestResult(BaseModel):
+class TestResult(TestScenario):
     passed: bool
