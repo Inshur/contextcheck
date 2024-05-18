@@ -8,6 +8,8 @@ from pydantic import (
     model_validator,
 )
 
+from contextcheck.assertions.assertions import AssertionBase
+from contextcheck.assertions.factory import factory as assertions_factory
 from contextcheck.endpoints.endpoint import EndpointConfig
 from contextcheck.loaders.yaml import load_yaml_file
 from contextcheck.models.request import RequestBase
@@ -24,6 +26,8 @@ class TestStep(BaseModel):
     request: RequestBase
     response: ResponseBase | None = None
     default_request: ClassVar[RequestBase] = RequestBase()
+    asserts: list[AssertionBase] = []
+    result: bool | None = None
 
     @model_validator(mode="before")
     @classmethod
@@ -38,6 +42,13 @@ class TestStep(BaseModel):
     @classmethod
     def use_default_request(cls, req: RequestBase) -> RequestBase:
         return cls.default_request.model_copy(update=req.model_dump())
+
+    @field_validator("asserts")
+    @classmethod
+    def prepare_asserts(
+        cls, asserts: list[AssertionBase]
+    ) -> list[AssertionBase]:
+        return [assertions_factory(assert_.model_dump()) for assert_ in asserts]
 
 
 class TestScenario(BaseModel):
@@ -57,5 +68,5 @@ class TestScenario(BaseModel):
         return klass
 
 
-class TestResult(TestScenario):
+class TestScenarioResult(TestScenario):
     passed: bool

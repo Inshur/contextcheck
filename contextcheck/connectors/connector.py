@@ -4,17 +4,20 @@ from openai import BaseModel
 
 
 class ConnectorStats(BaseModel):
-    duration_context: float | None = None
+    conn_start_time: float | None = None
+    conn_end_time: float | None = None
+    conn_duration: float | None = None
 
 
 class ConnectorBase(BaseModel):
-    _stats: ConnectorStats = ConnectorStats()
+    stats: ConnectorStats = ConnectorStats()
 
     def __enter__(self):
-        self._stats.duration_context = time.perf_counter()
+        self.stats.conn_start_time = time.perf_counter()
         return self
 
     def __exit__(self, type, value, traceback):
-        self._stats.duration_context = (
-            time.perf_counter() - self._stats.duration_context
+        self.stats.conn_end_time = time.perf_counter()
+        self.stats.conn_duration = (
+            self.stats.conn_end_time - self.stats.conn_start_time
         )

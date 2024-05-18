@@ -18,14 +18,3 @@ def factory(endpoint_config: EndpointConfig) -> EndpointBase:
         raise ValueError("No endpoint for this kind of config.")
 
     return endpoint_class(config=endpoint_config)
-
-
-# def factory(endpoint_config: EndpointConfig) -> EndpointBase:
-#     kind = endpoint_config.kind
-#     try:
-#         ep_cls = next(
-#             cls for cls in EndpointBase.__subclasses__() if cls.kind == kind
-#         )
-#     except StopIteration:
-#         raise ValueError("No endpoint for this kind of config.")
-#     return ep_cls(config=endpoint_config)

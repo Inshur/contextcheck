@@ -11,4 +11,6 @@ steps:
    - "Write 'fail' in the response"
    - "Write 'success' in the response"
    - name: Send hello
-     request: 'Hello!'
+     request: 'Change pax count to 4!'
+     assert:
+        - eval: 'response.stats.duration_context < 3'

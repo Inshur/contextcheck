@@ -23,4 +23,4 @@ class EndpointOpenAI(EndpointBase):
                 tokens_response=data["usage"]["completion_tokens"],
                 tokens_total=data["usage"]["total_tokens"],
             )
-            return cls(message=message, _stats=response_stats)
+            return cls(message=message, stats=response_stats)

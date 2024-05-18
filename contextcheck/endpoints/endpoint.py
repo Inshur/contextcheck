@@ -28,6 +28,9 @@ class EndpointBase(BaseModel):
         req = self.RequestModel(**req.model_dump())
         with self._connector as c:
             response_dict = c.send(req.render())
-            response_dict["_stats"] = c._stats
-        response = self.ResponseModel(**response_dict)
+        response = self.ResponseModel.from_dict(response_dict)
+
+        # Add connector stats to response stats:
+        response.stats = response.stats.model_copy(update=c.stats.model_dump())
+
         return response

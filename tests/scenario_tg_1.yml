@@ -1,32 +1,30 @@
 config:
    endpoint_under_test:
       kind: tg_chatbot
-      url: "http://0.0.0.0:8033/api/v1/asr-chat"
-      additional_headers: 
+      url: 'http://0.0.0.0:8033/api/v1/asr-chat'
+      additional_headers:
          X-API-KEY: a
    default_request:
-      chat_uuid: "{{ chat_uuid }}"
-      sender_name: "{{ sender_name }}" 
-      asr_build: "{{ asr_build }}"  
-     
+      chat_uuid: '{{ chat_uuid }}'
+      sender_name: '{{ sender_name }}'
+      asr_build: '{{ asr_build }}'
 
 steps:
-   # - "Write success in the response"
+   - 'Write success in the response'
    - name: Send hello
-     request: 
-        message: "Hello!"
-        chat_uuid: "{{ chat_uuid }}"
-        asr_build: "{{ asr_build }}"    
-        sender_name: "{{ sender_name }}"  
-   - "[reset]"
+     request:
+        message: 'Hello!'
+        chat_uuid: '{{ chat_uuid }}'
+        asr_build: '{{ asr_build }}'
+        sender_name: '{{ sender_name }}'
+   - '[reset]'
    - name: Send qa hello
-     request: 
-        message: "[qa] Hello!"
+     request:
+        message: '[qa] Hello!'
 
 variables:
-   chat_uuid: "123e4567-e89b-12d3-a456-426614174000"
-   asr_build: 
+   chat_uuid: '123e4567-e89b-12d3-a456-426614174000'
+   asr_build:
       itinerary: []
-         
-   sender_name: "John Doe"
 
+   sender_name: 'John Doe'

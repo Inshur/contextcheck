@@ -2,9 +2,13 @@ config:
    endpoint_under_test:
       kind: openai
 
-
 steps:
-   - "Write success in the response"
+   # - 'Write success in the response'
    - name: Send hello
-     request: "Hello!"
-
+     request: 'Hello!'
+     asserts:
+        - eval: 'response.stats.conn_duration < 3'
+        - 'response.stats.tokens_response > 5'
+        - '"Hello" in response.message'
+        - '"Goodbye" in response.message'
+        - '2+4'
