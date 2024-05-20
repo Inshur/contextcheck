@@ -1,0 +1,77 @@
+config:
+   endpoint_under_test:
+      kind: tg_chatbot
+      url: 'http://0.0.0.0:8033/api/v1/asr-chat'
+      additional_headers:
+         X-API-KEY: a
+   default_request:
+      chat_uuid: '{{ chat_uuid }}'
+      sender_name: '{{ sender_name }}'
+      asr_build: '{{ asr_build }}'
+
+steps:
+   - '[reset]'
+   - Which operators have a Narrow Body Airliner in their fleet?
+   - What are the operating hours at {{ airport }}?
+   - Does {{ airport }} have customs?
+   # - What is the flight time between {{ airport }} and <airport? on <aircraft_category>?
+   - What FBO's are there at {{ airport }}?
+   - Does {{ airport }} have second stage climb restrictions?
+   - What is the altitude at {{ airport }}?
+   - What is the runway length at {{ airport }}?
+   - What airports are near {{ city }}?
+   - What airports are in {{ country }}?
+   - Does {{ airport }} support 121 flights?
+   - What is {{ operator }}'s rating?
+   - How many flights have we done with {{ operator }}?
+   - What airports are new New York?
+   - What airports are near Chicago
+   - What airports are near Rhode Island
+   - What airports are are near Washington DC
+
+variables:
+   chat_uuid: '123e4567-e89b-12d3-a456-426614174000'
+   airport: KBOS
+   city: Boston
+   country: Poland
+   operator: Prime Jet
+
+   asr_build: >
+      {
+         "asr_name": "Urgent Business Trip",
+         "opportunity_notes": "This is a high-priority client.",
+         "pax_count": 3,
+         "aircraft_preference": "Midsize, Super Midsize",
+         "additional_instructions": "Ensure a vegan meal option is available.",
+         "itinerary": [
+            {
+                  "date": "2024-04-20",
+                  "aircraft_preference": "Midsize",
+                  "origin_airport": ["18255", "KTEB"],
+                  "destination_airport": [9525, "KVNY"],
+                  "depart_arrive": "Depart At",
+                  "user_time": "10:00",
+                  "block_hours": "4.5"
+            },
+            {
+                  "date": "2024-04-22",
+                  "aircraft_preference": "Midsize",
+                  "origin_airport": [9525, "KVNY"],
+                  "destination_airport": [26067, "KJAC"],
+                  "depart_arrive": "Depart At",
+                  "user_time": "12:01",
+                  "block_hours": "2.0"
+            },
+            {
+                  "date": "2024-04-24",
+                  "aircraft_preference": "Midsize",
+                  "origin_airport": [26067, "KJAC"],
+                  "destination_airport": ["18255", "KTEB"],
+                  "depart_arrive": "Depart At",
+                  "user_time": "12:01",
+                  "block_hours": "2.0"
+            }
+         ]
+      }
+
+   sender_name: 'John Doe'

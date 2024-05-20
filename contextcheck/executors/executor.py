@@ -39,7 +39,10 @@ class Executor:
         test_step.response = response
         print(Panel("[bold red]:face_with_monocle: Validation:"))
 
+        test_step.result = True
+
         for assert_ in test_step.asserts:
             assert_.check(test_step.response)
+            test_step.result &= assert_.result
             print(assert_)
         return test_step

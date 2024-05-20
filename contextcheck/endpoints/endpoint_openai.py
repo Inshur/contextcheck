@@ -1,5 +1,7 @@
 from typing import Self
 
+from pydantic import model_serializer, model_validator
+
 from contextcheck.connectors.connector_openai import ConnectorOpenAI
 from contextcheck.endpoints.endpoint import EndpointBase
 from contextcheck.models.request import RequestBase
@@ -11,16 +13,18 @@ class EndpointOpenAI(EndpointBase):
 
     class RequestModel(RequestBase):
 
-        def render(self) -> dict:
+        @model_serializer
+        def serialize(self) -> dict:
             return {"role": "user", "content": self.message}
 
     class ResponseModel(ResponseBase):
-        @classmethod
-        def from_dict(cls, data: dict) -> Self:
-            message = data["choices"][0]["message"]["content"]
-            response_stats = ResponseStats(
+
+        @model_validator(mode="before")
+        def from_dict(cls, data: dict) -> dict:
+            data["message"] = data["choices"][0]["message"]["content"]
+            data["stats"] = ResponseStats(
                 tokens_request=data["usage"]["prompt_tokens"],
                 tokens_response=data["usage"]["completion_tokens"],
                 tokens_total=data["usage"]["total_tokens"],
             )
-            return cls(message=message, stats=response_stats)
+            return data
