@@ -8,8 +8,6 @@ def load_yaml_file(file_path: Path) -> dict:
     if not file_path.exists():
         raise FileNotFoundError(f"File '{file_path}' does not exist.")
 
-    print(file_path)
-
     with open(file_path, "r") as file:
         yaml_content = file.read()
 

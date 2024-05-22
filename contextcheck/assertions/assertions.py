@@ -1,5 +1,4 @@
-from openai import BaseModel
-from pydantic import ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, model_validator
 
 from contextcheck.models.response import ResponseBase
 

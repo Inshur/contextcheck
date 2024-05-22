@@ -1,4 +1,4 @@
-from typing import Generator, Self
+from typing import Generator
 
 from rich import print
 from rich.panel import Panel

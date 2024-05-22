@@ -1,6 +1,6 @@
 import json
 
-from pydantic import field_validator, model_serializer
+from pydantic import field_validator
 
 from contextcheck.connectors.connector_http import ConnectorHTTP
 from contextcheck.endpoints.endpoint import EndpointBase

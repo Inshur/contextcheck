@@ -9,7 +9,9 @@ class ConnectorHTTP(ConnectorBase):
     method: str = "POST"
     timeout: int = 30
 
-    def send(self, data: dict, params: dict | None = None, timeout: int | None = None) -> dict:
+    def send(
+        self, data: dict, params: dict | None = None, timeout: int | None = None
+    ) -> dict:
         params = params or {}
         response = requests.post(
             url=self.url,

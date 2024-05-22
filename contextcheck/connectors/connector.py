@@ -1,6 +1,6 @@
 import time
 
-from openai import BaseModel
+from pydantic import BaseModel
 
 
 class ConnectorStats(BaseModel):

@@ -1,5 +1,3 @@
-from typing import Self
-
 from pydantic import model_serializer, model_validator
 
 from contextcheck.connectors.connector_openai import ConnectorOpenAI

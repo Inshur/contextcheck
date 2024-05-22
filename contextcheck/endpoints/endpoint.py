@@ -1,7 +1,4 @@
-from typing import Annotated
-
-from openai import BaseModel
-from pydantic import AfterValidator, AnyUrl
+from pydantic import BaseModel
 
 from contextcheck.connectors.connector import ConnectorBase
 from contextcheck.models.request import RequestBase

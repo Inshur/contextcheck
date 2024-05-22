@@ -10,7 +10,7 @@ class RequestBase(BaseModel):
     def from_obj(cls, obj: str | dict) -> dict:
         return obj if type(obj) is dict else {"message": obj}
 
-    def render(self) -> dict:
-        """Render request dict from the model"""
-        return self.model_dump()
-        # raise NotImplementedError("Request render method not implemented")
+    # def render(self) -> dict:
+    #     """Render request dict from the model"""
+    #     return self.model_dump()
+    #     # raise NotImplementedError("Request render method not implemented")
