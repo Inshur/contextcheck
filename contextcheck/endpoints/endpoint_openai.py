@@ -7,16 +7,14 @@ from contextcheck.models.response import ResponseBase, ResponseStats
 
 
 class EndpointOpenAI(EndpointBase):
-    _connector: ConnectorOpenAI = ConnectorOpenAI()
+    connector: ConnectorOpenAI = ConnectorOpenAI()
 
     class RequestModel(RequestBase):
-
         @model_serializer
         def serialize(self) -> dict:
             return {"role": "user", "content": self.message}
 
     class ResponseModel(ResponseBase):
-
         @model_validator(mode="before")
         def from_dict(cls, data: dict) -> dict:
             data["message"] = data["choices"][0]["message"]["content"]

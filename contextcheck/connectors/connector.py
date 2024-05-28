@@ -18,6 +18,7 @@ class ConnectorBase(BaseModel):
 
     def __exit__(self, type, value, traceback):
         self.stats.conn_end_time = time.perf_counter()
-        self.stats.conn_duration = (
-            self.stats.conn_end_time - self.stats.conn_start_time
-        )
+        self.stats.conn_duration = self.stats.conn_end_time - self.stats.conn_start_time
+
+    def send(self, args, **kwargs):
+        raise NotImplementedError

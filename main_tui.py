@@ -27,7 +27,7 @@ with Live(table, refresh_per_second=4):  # update 4 times a second to feel fluid
     for tsr in executor.iter_steps():
         table.add_row(
             Pretty(tsr.request.message),
-            Pretty(tsr.response.reply),
+            Pretty(tsr.response),
             Pretty(tsr.asserts),
             "[green]OK" if tsr.result else "[red]FAIL",
         )

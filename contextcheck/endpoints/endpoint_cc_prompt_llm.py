@@ -6,16 +6,13 @@ from contextcheck.models.request import RequestBase
 
 
 class EndpointCCPromptLLM(EndpointBase):
-
     class RequestModel(RequestBase):
-
         @model_serializer
         def serialize(self) -> dict:
             return {"prompt": self.message}
 
-    @property
-    def _connector(self) -> ConnectorHTTP:
-        return ConnectorHTTP(
+    def model_post_init(self, __context) -> None:
+        self.connector = ConnectorHTTP(
             url=self.config.url,
             additional_headers=self.config.additional_headers,
         )
