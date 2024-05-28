@@ -1,7 +1,7 @@
 config:
    endpoint_under_test:
       kind: tg_chatbot
-      url: 'http://0.0.0.0:8033/api/v1/asr-chat'
+      url: 'http://localhost:8033/api/v1/asr-chat'
       additional_headers:
          X-API-KEY: a
    default_request:

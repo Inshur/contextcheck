@@ -1,14 +1,11 @@
 from typing import Generator
 
+from loguru import logger
 from rich import print
 from rich.panel import Panel
 
 from contextcheck.endpoints.factory import factory as endpoint_factory
-from contextcheck.models.models import (
-    TestScenario,
-    TestScenarioResult,
-    TestStep,
-)
+from contextcheck.models.models import TestScenario, TestScenarioResult, TestStep
 
 
 class Executor:
@@ -19,12 +16,14 @@ class Executor:
         )
 
     def run(self) -> TestScenarioResult:
+        logger.info("Running scenario", self.test_scenario)
         result = True
         for test_step in self.test_scenario.steps:
             test_step = self._run_step(test_step)
             result = result and test_step.result
 
     def iter_steps(self) -> Generator[TestStep, None, None]:
+        logger.info("Iter steps of ", self.test_scenario)
         for test_step in self.test_scenario.steps:
             test_step = self._run_step(test_step)
             yield test_step

@@ -8,7 +8,7 @@ from rich.table import Table
 from contextcheck.executors.executor import Executor
 from contextcheck.models.models import TestScenario
 
-ts = TestScenario.from_yaml(Path("tests/scenario_tg_qa1.yaml"))
+ts = TestScenario.from_yaml(Path("tests/scenario_echo.yaml"))
 # ts = TestScenario.from_yaml(Path("tests/scenario_cc_prompt_llm.yml"))
 # ts = TestScenario.from_yaml(Path("tests/scenario_openai.yml"))
 
