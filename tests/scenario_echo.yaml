@@ -17,7 +17,16 @@ steps:
     asserts:
       - eval: 'True == True'
       - eval: 'response.message == "Hello!"'
-      - eval: 'response.chat_uuid == "0x11"'
+        result: False
+      - 'response.chat_uuid == "0x11"'
+
+  - name: Send previous received chat_uuid
+    request:
+      message: 'Here is previous chat_uuid'
+      chat_uuid:
+        eval: 'last_response.chat_uuid'
+    # asserts:
+    #   - eval: 'response.chat_uuid == "0x11"'
 
 variables:
   chat_uuid: '0x00'
