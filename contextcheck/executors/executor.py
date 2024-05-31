@@ -6,6 +6,7 @@ from rich.panel import Panel
 
 from contextcheck.endpoints.factory import factory as endpoint_factory
 from contextcheck.models.models import TestScenario, TestScenarioResult, TestStep
+from contextcheck.models.response import ResponseBase
 
 
 class Executor:
@@ -14,6 +15,7 @@ class Executor:
         self.endpoint_under_test = endpoint_factory(
             self.test_scenario.config.endpoint_under_test
         )
+        self.last_response: ResponseBase | None = None
 
     def run(self) -> bool | None:
         logger.info("Running scenario", self.test_scenario)
@@ -31,13 +33,15 @@ class Executor:
             yield test_step
 
     def _run_step(self, test_step: TestStep) -> TestStep:
-        request = test_step.request
+        context = {"last_response": self.last_response}
+        request = test_step.request.render(context)
         print(Panel("[bold red]:speech_balloon: Request:"))
         print(request)
         response = self.endpoint_under_test.send_request(request)
         print(Panel("[bold red]:balloon: Response:"))
         print(response)
         test_step.response = response
+        self.last_response = response
         print(Panel("[bold red]:face_with_monocle: Validation:"))
 
         test_step.result = True

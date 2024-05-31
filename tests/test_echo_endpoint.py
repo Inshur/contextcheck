@@ -17,7 +17,7 @@ def test_load_scenario_from_yaml():
     assert ts.steps[0].name == "Write success in the response"
     assert ts.steps[1].request.message == "Hello!"
     assert ts.steps[1].request.chat_uuid == "0x00"
-    assert ts.steps[1].name == "Send hello"
+    assert ts.steps[1].name == "Send request with additional fields, including variable"
     assert len(ts.steps[2].asserts) == 3
     assert ts.steps[2].asserts[0].eval == "True == True"
     assert ts.steps[2].asserts[1].eval == 'response.message == "Hello!"'
@@ -52,3 +52,10 @@ def test_run():
 
     assert ts.steps[0].response.stats is not None
     assert ts.steps[0].response.stats.tokens_total is None
+
+    # Test fields eval:
+    assert ts.steps[3].response.chat_uuid == "0x11"
+    assert ts.steps[3].response.message == "Here is previous chat_uuid"
+    assert ts.steps[3].result is True
+    assert ts.steps[3].response.asr_build["some_field1"] == "field1"
+    assert ts.steps[3].response.asr_build["some_field3"] == 4
