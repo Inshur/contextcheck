@@ -49,6 +49,7 @@ class TestScenario(BaseModel):
     __test__ = False
     steps: list[TestStep] = []
     config: Annotated[TestConfig, BeforeValidator(lambda x: {} if x is None else x)]
+    result: bool | None = None
 
     @classmethod
     def from_yaml(cls, file_path: Path) -> Self:

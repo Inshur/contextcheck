@@ -8,5 +8,16 @@ steps:
   - 'Write success in the response'
   - name: Send hello
     request:
-      message: 'Hello'
-      chat_uuid: '0x111'
+      message: 'Hello!'
+      chat_uuid: '{{ chat_uuid }}'
+  - name: Send hello
+    request:
+      message: 'Hello!'
+      chat_uuid: '0x11'
+    asserts:
+      - eval: 'True == True'
+      - eval: 'response.message == "Hello!"'
+      - eval: 'response.chat_uuid == "0x11"'
+
+variables:
+  chat_uuid: '0x00'

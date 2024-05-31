@@ -12,10 +12,13 @@ class AssertionBase(BaseModel):
     def from_obj(cls, obj: dict | str) -> dict:
         return obj if type(obj) is dict else {"eval": obj}
 
+    def __call__(self, response: ResponseBase) -> bool:
+        raise NotImplementedError
+
 
 class AssertionEval(AssertionBase):
     eval: str
 
-    def check(self, response: ResponseBase) -> bool:
+    def __call__(self, response: ResponseBase) -> bool:
         self.result = bool(eval(self.eval))  # Should be bool
         return self.result

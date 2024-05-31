@@ -15,12 +15,14 @@ class Executor:
             self.test_scenario.config.endpoint_under_test
         )
 
-    def run(self) -> TestScenarioResult:
+    def run(self) -> bool | None:
         logger.info("Running scenario", self.test_scenario)
         result = True
         for test_step in self.test_scenario.steps:
             test_step = self._run_step(test_step)
             result = result and test_step.result
+        self.test_scenario.result = result
+        return result
 
     def iter_steps(self) -> Generator[TestStep, None, None]:
         logger.info("Iter steps of ", self.test_scenario)
@@ -41,7 +43,6 @@ class Executor:
         test_step.result = True
 
         for assert_ in test_step.asserts:
-            assert_.check(test_step.response)
-            test_step.result &= assert_.result
+            test_step.result &= assert_(test_step.response)
             print(assert_)
         return test_step
