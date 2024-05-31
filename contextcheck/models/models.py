@@ -1,12 +1,7 @@
 from pathlib import Path
 from typing import Annotated, ClassVar, Self
 
-from pydantic import (
-    BaseModel,
-    BeforeValidator,
-    field_validator,
-    model_validator,
-)
+from pydantic import BaseModel, BeforeValidator, field_validator, model_validator
 
 from contextcheck.assertions.assertions import AssertionBase
 from contextcheck.assertions.factory import factory as assertions_factory
@@ -41,22 +36,19 @@ class TestStep(BaseModel):
     @field_validator("request")
     @classmethod
     def use_default_request(cls, req: RequestBase) -> RequestBase:
+        print(req.model_dump())
         return cls.default_request.model_copy(update=req.model_dump())
 
     @field_validator("asserts")
     @classmethod
-    def prepare_asserts(
-        cls, asserts: list[AssertionBase]
-    ) -> list[AssertionBase]:
+    def prepare_asserts(cls, asserts: list[AssertionBase]) -> list[AssertionBase]:
         return [assertions_factory(assert_.model_dump()) for assert_ in asserts]
 
 
 class TestScenario(BaseModel):
     __test__ = False
     steps: list[TestStep] = []
-    config: Annotated[
-        TestConfig, BeforeValidator(lambda x: {} if x is None else x)
-    ]
+    config: Annotated[TestConfig, BeforeValidator(lambda x: {} if x is None else x)]
 
     @classmethod
     def from_yaml(cls, file_path: Path) -> Self:

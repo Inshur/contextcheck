@@ -1,0 +1,12 @@
+config:
+  endpoint_under_test:
+    kind: echo
+  default_request:
+    chat_uuid: '0xdead'
+
+steps:
+  - 'Write success in the response'
+  - name: Send hello
+    request:
+      message: 'Hello'
+      chat_uuid: '0x111'
