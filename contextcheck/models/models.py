@@ -27,16 +27,16 @@ class TestStep(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def from_obj(cls, obj: dict | str) -> dict:
+        # Default test step is request with `message` field
         return (
             obj
-            if type(obj) is dict
+            if isinstance(obj, dict)
             else {"name": obj, "request": RequestBase(message=obj)}
         )
 
     @field_validator("request")
     @classmethod
     def use_default_request(cls, req: RequestBase) -> RequestBase:
-        print(req.model_dump())
         return cls.default_request.model_copy(update=req.model_dump())
 
     @field_validator("asserts")
@@ -54,12 +54,10 @@ class TestScenario(BaseModel):
     @classmethod
     def from_yaml(cls, file_path: Path) -> Self:
         cls_dict = load_yaml_file(file_path)
+
+        # Get config here to set default request
         config = TestConfig.model_validate(cls_dict.get("config", {}) or {})
         if config.default_request:
             TestStep.default_request = config.default_request
-        klass = cls.model_validate(cls_dict)
-        return klass
 
-
-class TestScenarioResult(TestScenario):
-    passed: bool
+        return cls.model_validate(cls_dict)

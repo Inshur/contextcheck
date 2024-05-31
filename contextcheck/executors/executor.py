@@ -5,7 +5,7 @@ from rich import print
 from rich.panel import Panel
 
 from contextcheck.endpoints.factory import factory as endpoint_factory
-from contextcheck.models.models import TestScenario, TestScenarioResult, TestStep
+from contextcheck.models.models import TestScenario, TestStep
 from contextcheck.models.response import ResponseBase
 
 
@@ -17,24 +17,23 @@ class Executor:
         )
         self.last_response: ResponseBase | None = None
 
-    def run(self) -> bool | None:
+    def run_all(self) -> bool | None:
         logger.info("Running scenario", self.test_scenario)
         result = True
-        for test_step in self.test_scenario.steps:
-            test_step = self._run_step(test_step)
+        for test_step in self.run_steps():
             result = result and test_step.result
         self.test_scenario.result = result
         return result
 
-    def iter_steps(self) -> Generator[TestStep, None, None]:
-        logger.info("Iter steps of ", self.test_scenario)
+    def run_steps(self) -> Generator[TestStep, None, None]:
         for test_step in self.test_scenario.steps:
             test_step = self._run_step(test_step)
             yield test_step
 
     def _run_step(self, test_step: TestStep) -> TestStep:
+        # Set context for response build
         context = {"last_response": self.last_response}
-        request = test_step.request.render(context)
+        request = test_step.request.build(context)
         print(Panel("[bold red]:speech_balloon: Request:"))
         print(request)
         response = self.endpoint_under_test.send_request(request)

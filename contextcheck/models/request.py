@@ -14,7 +14,7 @@ class RequestBase(BaseModel):
     def from_obj(cls, obj: str | dict) -> dict:
         return obj if isinstance(obj, dict) else {"message": obj}
 
-    def render(self, context: dict | None = None) -> Self:
+    def build(self, context: dict | None = None) -> Self:
         def _search_and_replace(d: dict) -> dict:
             """Search recursively dict for computation string and replace it with function result."""
             for key, value in d.items():

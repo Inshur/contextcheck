@@ -10,7 +10,8 @@ class AssertionBase(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def from_obj(cls, obj: dict | str) -> dict:
-        return obj if type(obj) is dict else {"eval": obj}
+        # Default assertion without keyword:
+        return obj if isinstance(obj, dict) else {"eval": obj}
 
     def __call__(self, response: ResponseBase) -> bool:
         raise NotImplementedError

@@ -32,7 +32,7 @@ def test_run():
     for step in executor.test_scenario.steps:
         assert step.result is None
         assert step.response is None
-    executor.run()
+    executor.run_all()
     ts = executor.test_scenario
 
     assert ts.result is not None
