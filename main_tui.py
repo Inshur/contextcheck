@@ -24,7 +24,7 @@ print(ts.config)
 
 
 with Live(table, refresh_per_second=4):  # update 4 times a second to feel fluid
-    for tsr in executor.iter_steps():
+    for tsr in executor.run_steps():
         table.add_row(
             Pretty(tsr.request.message),
             Pretty(tsr.response),
