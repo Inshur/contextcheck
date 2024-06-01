@@ -3,22 +3,16 @@ from typing import Generator
 from loguru import logger
 
 from contextcheck.endpoints.factory import factory as endpoint_factory
+from contextcheck.interfaces.interface_tui import InterfaceTUI
 from contextcheck.models.models import TestScenario, TestStep
 from contextcheck.models.response import ResponseBase
-
-# from rich import print
-# from rich.console import Console, Group
-# from rich.panel import Panel
-# from rich.text import Text
-
-
-# console = Console()
 
 
 class Executor:
     def __init__(self, test_scenario: TestScenario) -> None:
         self.test_scenario = test_scenario
         self.context: dict = {}
+        self.ui = InterfaceTUI()
         self.endpoint_under_test = endpoint_factory(
             self.test_scenario.config.endpoint_under_test
         )
@@ -45,25 +39,19 @@ class Executor:
         """
 
         request = test_step.request.build(self.context)
-        # g1 = Group(
-        #     console.render_str("[bold red]:speech_balloon: Request:"),
-        #     console.render_str(str(request)),
-        # )
-        # print(Panel(g1, width=80))
+
+        self.ui.request_callback(request)
 
         response = self.endpoint_under_test.send_request(request)
         test_step.response = response
         self._update_context(last_response=response)
 
-        # print(Panel("[bold red]:balloon: Response:"))
-
-        # print(response)
-        # print(Panel("[bold red]:face_with_monocle: Validation:"))
+        self.ui.response_callback(response)
 
         result = True
         for assertion in test_step.asserts:
             result &= assertion(test_step.response)
-            # print(assert_)
+            self.ui.assertion_callback(assertion)
         test_step.result = result
         return test_step
 
