@@ -1,10 +1,5 @@
 from pathlib import Path
 
-from rich import print
-from rich.live import Live
-from rich.pretty import Pretty
-from rich.table import Table
-
 from contextcheck.executors.executor import Executor
 from contextcheck.models.models import TestScenario
 

@@ -3,16 +3,18 @@ from typing import Generator
 from loguru import logger
 
 from contextcheck.endpoints.factory import factory as endpoint_factory
+from contextcheck.interfaces.interface import InterfaceBase
 from contextcheck.interfaces.interface_tui import InterfaceTUI
 from contextcheck.models.models import TestScenario, TestStep
-from contextcheck.models.response import ResponseBase
 
 
 class Executor:
-    def __init__(self, test_scenario: TestScenario) -> None:
+    def __init__(
+        self, test_scenario: TestScenario, ui: InterfaceBase | None = None
+    ) -> None:
         self.test_scenario = test_scenario
         self.context: dict = {}
-        self.ui = InterfaceTUI()
+        self.ui = ui or InterfaceTUI()
         self.endpoint_under_test = endpoint_factory(
             self.test_scenario.config.endpoint_under_test
         )
