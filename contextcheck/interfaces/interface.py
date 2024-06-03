@@ -1,22 +1,15 @@
 from typing import Any
 
-
+from loguru import logger
 from pydantic import BaseModel
 
 
 class InterfaceBase(BaseModel):
+    """UI should "know" what to do with a given object."""
 
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        pass
+    def __call__(self, obj: Any) -> Any:
+        logger.info(obj)
 
-    def request_callback(self, request: BaseModel) -> None:
-        pass
-
-    def response_callback(self, response: BaseModel) -> None:
-        pass
-
-    def assertion_callback(self, assertion: BaseModel) -> None:
-        pass
-
-    def finish_callback(self, test_scenario: BaseModel) -> None:
-        pass
+    @staticmethod
+    def summary(obj: Any) -> Any:
+        logger.info(obj)

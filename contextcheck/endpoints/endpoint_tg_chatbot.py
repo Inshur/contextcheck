@@ -1,6 +1,6 @@
 import json
 
-from pydantic import computed_field, field_validator
+from pydantic import field_validator
 
 from contextcheck.connectors.connector_http import ConnectorHTTP
 from contextcheck.endpoints.endpoint import EndpointBase
@@ -14,9 +14,10 @@ class EndpointTGChatBot(EndpointBase):
         @field_validator("asr_build", mode="before")
         @classmethod
         def asr_converstion(cls, obj: str | dict) -> dict:
-            if type(obj) is str:
+            """Get ASR as dict or string encoded as JSON"""
+            if isinstance(obj, str):
                 return json.loads(obj)
-            elif type(obj) is dict:
+            elif isinstance(obj, dict):
                 return obj
             else:
                 raise ValueError(

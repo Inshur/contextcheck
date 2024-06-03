@@ -14,7 +14,7 @@ def factory(assert_definition: dict) -> AssertionBase:
             if assert_key in assertions_map
         )
     except StopIteration:
-        raise ValueError(f"No assertion of kind {kind}")
+        raise ValueError(f"No assertion for definition {assert_definition}")
 
     assertion_class = assertions_map[kind]
     return assertion_class.model_validate(assert_definition)

@@ -7,9 +7,9 @@ from contextcheck.models.response import ResponseBase
 
 class EndpointConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
-    kind: str | None = "openai"
-    # endpoint_url: Annotated[AnyUrl, AfterValidator(str)] | None = None
-    # additional_headers: dict | None = {}
+    kind: str = "openai"
+    url: str = ""  # AnyUrl type can be applied
+    additional_headers: dict = {}
 
 
 class EndpointBase(BaseModel):

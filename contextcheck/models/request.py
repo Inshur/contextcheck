@@ -15,6 +15,8 @@ class RequestBase(BaseModel):
         return obj if isinstance(obj, dict) else {"message": obj}
 
     def build(self, context: dict | None = None) -> Self:
+        """Build request based on prototype values."""
+
         def _search_and_replace(d: dict) -> dict:
             """Search recursively dict for computation string and replace it with function result."""
             for key, value in d.items():
