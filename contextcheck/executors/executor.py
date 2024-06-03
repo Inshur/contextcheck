@@ -42,18 +42,18 @@ class Executor:
 
         request = test_step.request.build(self.context)
 
-        self.ui.request_callback(request)
+        self.ui(request)
 
         response = self.endpoint_under_test.send_request(request)
         test_step.response = response
         self._update_context(last_response=response)
 
-        self.ui.response_callback(response)
+        self.ui(response)
 
         result = True
         for assertion in test_step.asserts:
             result &= assertion(test_step.response)
-            self.ui.assertion_callback(assertion)
+            self.ui(assertion)
         test_step.result = result
         return test_step
 

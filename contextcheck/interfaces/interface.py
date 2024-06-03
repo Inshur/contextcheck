@@ -1,7 +1,13 @@
+from typing import Any
+
+
 from pydantic import BaseModel
 
 
 class InterfaceBase(BaseModel):
+
+    def __call__(self, *args: Any, **kwds: Any) -> Any:
+        pass
 
     def request_callback(self, request: BaseModel) -> None:
         pass
