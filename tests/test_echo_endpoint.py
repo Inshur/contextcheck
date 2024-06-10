@@ -11,7 +11,7 @@ def test_load_scenario_from_yaml():
     assert isinstance(ts.config.endpoint_under_test, EndpointConfig)
     assert ts.config.endpoint_under_test.kind == "echo"
     assert ts.config.default_request.chat_uuid == "0xdead"
-    assert len(ts.steps) == 5
+    assert len(ts.steps) == 6
     assert ts.steps[0].request.message == "Write success in the response"
     assert ts.steps[0].request.chat_uuid == "0xdead"
     assert ts.steps[0].name == "Write success in the response"
@@ -65,3 +65,9 @@ def test_run():
     assert ts.steps[4].asserts[1].result is None
     assert ts.steps[4].asserts[2].result is None
     assert ts.steps[4].result is False
+
+    # JSON parsing
+    assert ts.steps[5].asserts[0].result is True
+    assert ts.steps[5].asserts[1].result is True
+    assert ts.steps[5].asserts[2].result is True
+    assert ts.steps[5].asserts[3].result is True
