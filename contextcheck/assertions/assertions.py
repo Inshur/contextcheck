@@ -22,5 +22,11 @@ class AssertionEval(AssertionBase):
 
     def __call__(self, response: ResponseBase) -> bool:
         if self.result is None:
-            self.result = bool(eval(self.eval))  # Should be bool
+            try:
+                result = eval(self.eval)
+            except NameError:
+                raise NameError(f"Given eval `{self.eval}` uses non-existent name.")
+            if not isinstance(result, bool):
+                raise ValueError(f"Given eval `{self.eval}` does not evaluate to bool.")
+            self.result = result
         return self.result

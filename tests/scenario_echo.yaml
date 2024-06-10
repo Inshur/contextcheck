@@ -34,9 +34,16 @@ steps:
         some_field2: 'field2'
         some_field3:
           eval: '2+2' # Deep evaluation. BE AWARE that `asr_build` contain dict object, not nested request
-
     asserts:
       - eval: 'response.chat_uuid == "0x11"'
+
+  - name: Send hello and check assertions which are incorrect
+    request:
+      message: 'Hello!'
+    asserts:
+      - eval: 'name_does_not_exist == True' # wrong assertion
+      - eval: 'print("asd")' # wrong assertion, not bool
+      - eval: '2+2' # wrong assertion, not bool
 
 variables:
   chat_uuid: '0x00'
