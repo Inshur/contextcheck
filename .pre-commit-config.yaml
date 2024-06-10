@@ -1,0 +1,25 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+default_language_version:
+  python: python3
+repos:
+  - repo: local
+    hooks:
+      - id: isort
+        name: Sorting import statements
+        entry: bash -c 'isort "$@"' --
+        language: python
+        args: ['--sp=./pyproject.toml']
+        files: \.py$
+      - id: black
+        name: Black Python code formatting
+        entry: bash -c 'black "$@"' --
+        language: python
+        types: [python]
+        args: ['--config=./pyproject.toml']
+      - id: pylint
+        name: Linting python code using pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args: ['-rn', '--rcfile=./pyproject.toml']
