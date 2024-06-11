@@ -1,0 +1,16 @@
+config:
+   endpoint_under_test:
+      kind: cc_prompt_llm
+      url: 'http://127.0.0.1:8000/api/v1/qa/prompt_llm'
+      additional_headers:
+         tesettest: testtests
+
+steps:
+   - "Write 'success' in the response"
+   - 'What is the capital of Poland?'
+   - "Write 'fail' in the response"
+   - "Write 'success' in the response"
+   - name: Send hello
+     request: 'Change pax count to 4!'
+     assert:
+        - eval: 'response.stats.duration_context < 3'

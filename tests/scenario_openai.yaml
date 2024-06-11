@@ -1,0 +1,17 @@
+config:
+   endpoint_under_test:
+      kind: openai
+
+steps:
+   - 'Write success in the response'
+   - name: Check capital of Poland
+     request: 'What is the capital city of Poland?'
+     asserts:
+        - '"Warsaw" in response.message'
+        - 'response.stats.conn_duration < 3'
+   - name: Send hello
+     request: 'Hello!'
+     asserts:
+        - 'response.stats.conn_duration < 3'
+        - 'response.stats.tokens_response > 5'
+        - '"Goodbye" in response.message'
