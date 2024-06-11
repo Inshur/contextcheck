@@ -1,0 +1,8 @@
+config:
+
+
+steps:
+   - "Write success in the response"
+   - name: Send hello
+     request: "Hello!"
+
