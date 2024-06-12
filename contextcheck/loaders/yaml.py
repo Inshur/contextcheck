@@ -17,6 +17,9 @@ def load_yaml_file(file_path: Path, parse_template: bool = True) -> dict:
         yaml_dict_without_template = yaml.safe_load(yaml_content)
         variables = yaml_dict_without_template.get("variables", {})
 
+        # Some variables text can be multiline, so we need to replace newlines with spaces
+        variables = {key: value.replace("\n", " ") for key, value in variables.items()}
+
         # Create jinja2 template from original yaml and render it using variables
         template = Template(yaml_content)
         rendered_yaml = template.render(variables)

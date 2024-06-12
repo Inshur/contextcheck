@@ -61,7 +61,7 @@ class Executor:
 
         result = True
         for assertion in test_step.asserts:
-            result &= assertion(test_step.response)
+            result &= assertion(test_step, self.test_scenario.config)
             self.ui(assertion)
         test_step.result = result
         return test_step

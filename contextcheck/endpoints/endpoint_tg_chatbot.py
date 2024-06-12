@@ -8,7 +8,7 @@ from contextcheck.models.request import RequestBase
 
 
 class EndpointTGChatBot(EndpointBase):
-    class RequestModel(RequestBase):
+    class RequestModel(EndpointBase.RequestModel):
         asr_build: dict | None = None
 
         @field_validator("asr_build", mode="before")

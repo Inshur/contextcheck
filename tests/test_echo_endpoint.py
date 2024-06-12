@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from contextcheck import TestScenario
-from contextcheck.endpoints.endpoint import EndpointConfig
+from contextcheck.endpoints.endpoint_config import EndpointConfig
 from contextcheck.endpoints.endpoint_dummy_echo import EndpointDummyEcho
 from contextcheck.executors.executor import Executor
 

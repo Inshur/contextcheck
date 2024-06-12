@@ -1,15 +1,9 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
 
 from contextcheck.connectors.connector import ConnectorBase
+from contextcheck.endpoints.endpoint_config import EndpointConfig
 from contextcheck.models.request import RequestBase
 from contextcheck.models.response import ResponseBase
-
-
-class EndpointConfig(BaseModel):
-    model_config = ConfigDict(extra="allow")
-    kind: str = "openai"
-    url: str = ""  # AnyUrl type can be applied
-    additional_headers: dict = {}
 
 
 class EndpointBase(BaseModel):
@@ -17,14 +11,17 @@ class EndpointBase(BaseModel):
     connector: ConnectorBase = ConnectorBase()
     config: EndpointConfig = EndpointConfig()
 
+    def model_post_init(self, __context) -> None:
+        self.connector.config = self.config
+
     class RequestModel(RequestBase):
-        pass
+        config: EndpointConfig = EndpointConfig()
 
     class ResponseModel(ResponseBase):
-        pass
+        config: EndpointConfig = EndpointConfig()
 
     def send_request(self, req: RequestBase) -> ResponseBase:
-        req = self.RequestModel(**req.model_dump())
+        req = self.RequestModel(config=self.config, **req.model_dump())
         with self.connector as c:
             response_dict = c.send(req.model_dump())
         response = self.ResponseModel.model_validate(response_dict)

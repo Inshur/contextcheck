@@ -2,6 +2,8 @@ import time
 
 from pydantic import BaseModel
 
+from contextcheck.endpoints.endpoint_config import EndpointConfig
+
 
 class ConnectorStats(BaseModel):
     conn_start_time: float | None = None
@@ -10,6 +12,7 @@ class ConnectorStats(BaseModel):
 
 
 class ConnectorBase(BaseModel):
+    config: EndpointConfig = EndpointConfig()
     stats: ConnectorStats = ConnectorStats()
 
     def __enter__(self):
