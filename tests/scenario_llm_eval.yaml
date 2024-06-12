@@ -24,14 +24,14 @@ steps:
 
   - name: Test QA basing on reference evaluator
     request:
-      message: 'Three friends (Joe, Tom and Mike) are playing hide and seek. Joe is seeking. Where did Mike hide? (hint: He is behind curtains.)'
+      message: 'Three friends (Joe, Tom and Mike) are playing hide and seek. Joe is seeking. Where did Mike hide? (hint: Mike is behind the curtains.)'
     asserts:
       - llm_metric: qa-reference
         reference: Mike hid behind the curtains.
  
   - name: Test QA basing on reference evaluator (invalid answer)
     request:
-      message: 'Three friends (Joe, Tom and Mike) are playing hide and seek. Joe is seeking. Where did Mike hide? (hint: He is behind the kitchen.)'
+      message: 'Three friends (Joe, Tom and Mike) are playing hide and seek. Joe is seeking. Where did Mike hide? (hint: Mike is in the kitchen.)'
     asserts:
       - llm_metric: qa-reference
         reference: Mike hid behind the curtains.
@@ -41,7 +41,7 @@ steps:
       message: "About Einstein: {{ about_einstein_summary }}. Write equation mentioned in the text."
     asserts:
       - llm_metric: model-grading-qa
-        assertion: Should mention E=mc².
+        assertion: Should mention "E=mc²".
 
   - name: Test model grading QA evaluator (invalid answer)
     request:
