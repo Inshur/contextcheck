@@ -1,13 +1,9 @@
-import json
-
-from pydantic import field_validator
-
 from contextcheck.connectors.connector_http import ConnectorHTTP
 from contextcheck.endpoints.endpoint import EndpointBase
-from contextcheck.models.request import RequestBase
 
 
 class EndpointTGChatBot(EndpointBase):
+<<<<<<< HEAD
     class RequestModel(EndpointBase.RequestModel):
         asr_build: dict | None = None
 
@@ -23,6 +19,8 @@ class EndpointTGChatBot(EndpointBase):
                 raise ValueError(
                     "ASR provided in a wrong format (should be str or dict)"
                 )
+=======
+>>>>>>> dev
 
     def model_post_init(self, __context) -> None:
         self.connector = ConnectorHTTP(

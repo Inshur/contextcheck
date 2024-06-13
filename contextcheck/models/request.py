@@ -1,8 +1,24 @@
 from typing import Self
 
 from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic_core import from_json
 
 fields_computation_map = {"eval": lambda x, context: eval(str(x), context)}
+
+
+def replace_str_with_json(d: dict) -> dict:
+    """Replace all strings JSON-parsable with corresponding python object."""
+    for k, v in d.items():
+        if isinstance(v, str):
+            try:
+                d[k] = from_json(v)
+            except ValueError:  # Means that string is not json, leave it alone
+                pass
+        elif isinstance(v, dict):
+            d[k] = replace_str_with_json(v)
+        else:
+            continue
+    return d
 
 
 class RequestBase(BaseModel):
@@ -12,7 +28,11 @@ class RequestBase(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def from_obj(cls, obj: str | dict) -> dict:
-        return obj if isinstance(obj, dict) else {"message": obj}
+        """
+        If request is a string, return it as message field.
+        If request is a dict, dig deeper for string and convert it to dict if json.
+        """
+        return replace_str_with_json(obj) if isinstance(obj, dict) else {"message": obj}
 
     def build(self, context: dict | None = None) -> Self:
         """Build request based on prototype values."""
