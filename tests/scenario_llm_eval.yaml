@@ -15,7 +15,7 @@ config:
     # url: 'http://127.0.0.1:11434/api/generate'
 
 steps:
-  - name: Test hallucination evaluator
+  - name: Test hallucination evaluator (hallucinated)
     request:
       message: Where did Mike go? Choose between the home and the park.
     asserts:
@@ -63,7 +63,7 @@ steps:
       - llm_metric: human-vs-ai
         reference: "{{ about_einstein_summary }}"
 
-  - name: Test human vs model evaluation (wrong reference)
+  - name: Test human vs model evaluation (invalid answer)
     request:
       message: "{{ about_einstein }}\nWrite 3 sentences summary basing on the text above."
     asserts:
