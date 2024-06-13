@@ -41,7 +41,7 @@ steps:
       message: "About Einstein: {{ about_einstein_summary }}. Write equation mentioned in the text."
     asserts:
       - llm_metric: model-grading-qa
-        assertion: Should mention "E=mc²".
+        assertion: Should mention Einstein famous equation in format "E=mc²" or "E = mc^2".
 
   - name: Test model grading QA evaluator (invalid answer)
     request:
