@@ -2,16 +2,16 @@ from contextcheck.endpoints.endpoint import EndpointBase
 from contextcheck.endpoints.endpoint_cc_prompt_llm import EndpointCCPromptLLM
 from contextcheck.endpoints.endpoint_config import EndpointConfig
 from contextcheck.endpoints.endpoint_dummy_echo import EndpointDummyEcho
-from contextcheck.endpoints.endpoint_ollama import EndpointOllama
 from contextcheck.endpoints.endpoint_openai import EndpointOpenAI
+from contextcheck.endpoints.endpoint_openai_compatible import EndpointOpenAICompatible
 from contextcheck.endpoints.endpoint_tg_chatbot import EndpointTGChatBot
 
 endpoint_map = {
     "openai": EndpointOpenAI,
+    "openai_compatible": EndpointOpenAICompatible,
     "cc_prompt_llm": EndpointCCPromptLLM,
     "tg_chatbot": EndpointTGChatBot,
     "echo": EndpointDummyEcho,
-    "ollama": EndpointOllama,
 }
 
 

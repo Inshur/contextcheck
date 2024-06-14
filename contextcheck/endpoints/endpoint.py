@@ -13,17 +13,19 @@ class EndpointBase(BaseModel):
 
     def model_post_init(self, __context) -> None:
         self.connector.config = self.config
+        self.ResponseModel.config = self.config
 
     class RequestModel(RequestBase):
-        config: EndpointConfig = EndpointConfig()
+        config: EndpointConfig #= EndpointConfig()
 
     class ResponseModel(ResponseBase):
-        config: EndpointConfig = EndpointConfig()
+        config: EndpointConfig #= EndpointConfig()
 
     def send_request(self, req: RequestBase) -> ResponseBase:
         req = self.RequestModel(config=self.config, **req.model_dump())
         with self.connector as c:
             response_dict = c.send(req.model_dump())
+        response_dict.update({"config": self.config})
         response = self.ResponseModel.model_validate(response_dict)
 
         # Add connector stats to response stats:

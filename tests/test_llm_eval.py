@@ -1,9 +1,11 @@
 from pathlib import Path
+import pytest
 
 from contextcheck import TestScenario
 from contextcheck.executors.executor import Executor
 
 
+@pytest.mark.openai
 def test_evals():
     ts = TestScenario.from_yaml(Path("tests/scenario_llm_eval.yaml"))
     executor = Executor(ts)
@@ -23,7 +25,7 @@ def test_evals():
     assert test_steps[3].asserts[0].result == True
 
     # Test Model grading QA evaluator (invalid answer)
-    assert test_steps[4].asserts[0].result == False 
+    assert test_steps[4].asserts[0].result == False
 
     # Test Summarization evaluator
     assert test_steps[5].asserts[0].result == True
