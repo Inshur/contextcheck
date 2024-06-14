@@ -67,7 +67,4 @@ def test_run():
     assert ts.steps[4].result is False
 
     # JSON parsing
-    assert ts.steps[5].asserts[0].result is True
-    assert ts.steps[5].asserts[1].result is True
-    assert ts.steps[5].asserts[2].result is True
-    assert ts.steps[5].asserts[3].result is True
+    assert all(a.result for a in ts.steps[5].asserts)
