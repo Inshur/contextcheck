@@ -10,6 +10,9 @@ from contextcheck.models.response import ResponseBase
 class EndpointOpenAI(EndpointBase):
     connector: ConnectorOpenAI = ConnectorOpenAI()
 
+    def model_post_init(self, __context) -> None:
+        self.connector.config = self.config    
+
     class RequestModel(RequestBase):
         @model_serializer
         def serialize(self) -> dict:

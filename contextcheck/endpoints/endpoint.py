@@ -11,9 +11,6 @@ class EndpointBase(BaseModel):
     connector: ConnectorBase = ConnectorBase()
     config: EndpointConfig = EndpointConfig()
 
-    def model_post_init(self, __context) -> None:
-        self.connector.config = self.config
-
     class RequestModel(RequestBase):
         pass
 
