@@ -4,12 +4,14 @@ import dotenv
 from openai import OpenAI
 
 from contextcheck.connectors.connector import ConnectorBase
+from contextcheck.endpoints.endpoint_config import EndpointConfig
 
 dotenv.load_dotenv()
 
 
 class ConnectorOpenAI(ConnectorBase):
     api_key: str = os.environ["OPENAI_API_KEY"]
+    config: EndpointConfig = EndpointConfig()
 
     @property
     def _client(self) -> OpenAI:
