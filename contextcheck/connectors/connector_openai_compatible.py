@@ -3,7 +3,7 @@ from langchain import chat_models
 from langchain_community.adapters import openai as openai_compatibile
 
 from contextcheck.connectors.connector import ConnectorBase
-
+from contextcheck.endpoints.endpoint_config import EndpointConfig
 
 dotenv.load_dotenv()
 
@@ -14,6 +14,7 @@ def check_provider(provider: str) -> None:
 
 
 class ConnectorOpenAICompatible(ConnectorBase):
+    config: EndpointConfig = EndpointConfig()
 
     def send(self, data: dict) -> dict:
 

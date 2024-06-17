@@ -8,6 +8,9 @@ from contextcheck.models.response import ResponseStats
 class EndpointOpenAICompatible(EndpointBase):
     connector: ConnectorOpenAICompatible = ConnectorOpenAICompatible()
 
+    def model_post_init(self, __context) -> None:
+        self.connector.config = self.config        
+
     class RequestModel(EndpointBase.RequestModel):
         @model_serializer
         def serialize(self) -> dict:
