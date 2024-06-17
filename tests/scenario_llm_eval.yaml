@@ -2,17 +2,10 @@ config:
   endpoint_under_test:
     kind: openai
     # model: gpt-3.5-turbo
-    # Alternative, local evaluator
-    # kind: ollama 
-    # model: llama3:8b
-    # url: 'http://127.0.0.1:11434/api/generate'
   eval_endpoint:
     kind: openai
     # model: gpt-3.5-turbo
-    # Alternative, local evaluator
-    # kind: ollama
-    # model: llama3:8b
-    # url: 'http://127.0.0.1:11434/api/generate'
+
 
 steps:
   - name: Test hallucination evaluator (hallucinated)

@@ -32,17 +32,17 @@ class LLMMetric(BaseModel):
         return self.rails[response.message.lower()]  # type: ignore
 
 
-class HallucinationMetric(LLMMetric):
+class MetricHallucination(LLMMetric):
     prompt_template: str = HALLUCINATION_PROMPT_TEMPLATE
     rails: dict = {"factual": True, "hallucinated": False}
 
 
-class QAReferenceMetric(LLMMetric):
+class MetricQAReference(LLMMetric):
     prompt_template: str = QA_REFERENCE_PROMPT_TEMPLATE
     rails: dict = {"correct": True, "incorrect": False}
 
 
-class ModelGradingQAMetric(LLMMetric):
+class MetricModelGradingQA(LLMMetric):
     prompt_template: str = MODEL_GRADING_QA_PROMPT_TEMPLATE
     rails: dict = {"correct": True, "incorrect": False}
 
@@ -50,7 +50,7 @@ class ModelGradingQAMetric(LLMMetric):
         return self.prompt_template.format(output=output, assertion=args["assertion"])
 
 
-class SummarizationMetric(LLMMetric):
+class MetricSummarization(LLMMetric):
     prompt_template: str = SUMMARIZATION_PROMPT_TEMPLATE
     rails: dict = {"good": True, "bad": False}
 
@@ -58,17 +58,17 @@ class SummarizationMetric(LLMMetric):
         return self.prompt_template.format(input=input, output=output)
 
 
-class HumanVsAIMetric(LLMMetric):
+class MetricHumanVsAI(LLMMetric):
     prompt_template: str = HUMAN_VS_AI_PROMPT_TEMPLATE
     rails: dict = {"correct": True, "incorrect": False}
 
 
 llm_metric_type_map = {
-    "hallucination": HallucinationMetric,
-    "qa-reference": QAReferenceMetric,
-    "model-grading-qa": ModelGradingQAMetric,
-    "summarization": SummarizationMetric,
-    "human-vs-ai": HumanVsAIMetric,
+    "hallucination": MetricHallucination,
+    "qa-reference": MetricQAReference,
+    "model-grading-qa": MetricModelGradingQA,
+    "summarization": MetricSummarization,
+    "human-vs-ai": MetricHumanVsAI,
 }
 
 
