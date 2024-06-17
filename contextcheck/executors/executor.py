@@ -27,6 +27,11 @@ class Executor:
         self.context: dict = {}
         self.ui = ui or InterfaceBase()
         self.endpoint_under_test = endpoint_factory(self.test_scenario.config.endpoint_under_test)
+        self.eval_endpoint = (
+            endpoint_factory(self.test_scenario.config.eval_endpoint)
+            if self.test_scenario.config.eval_endpoint
+            else None
+        )
 
     def run_all(self) -> bool | None:
         """Run all test steps sequentially."""
@@ -60,7 +65,7 @@ class Executor:
         result = True
         for assertion in test_step.asserts:
             try:
-                result &= assertion(test_step, self.test_scenario.config)
+                result &= assertion(request, response, eval_endpoint=self.eval_endpoint)
             except Exception as e:
                 logger.error(f"Error during assertion: {e}")
                 result = False

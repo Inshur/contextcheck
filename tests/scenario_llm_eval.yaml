@@ -14,6 +14,7 @@ config:
     # provider: ChatOllama
     # model: llama3:8b
 
+
 steps:
   - name: Test hallucination evaluator (hallucinated)
     request:

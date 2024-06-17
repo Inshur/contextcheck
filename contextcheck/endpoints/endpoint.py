@@ -16,13 +16,13 @@ class EndpointBase(BaseModel):
         self.ResponseModel.config = self.config
 
     class RequestModel(RequestBase):
-        config: EndpointConfig #= EndpointConfig()
+        pass
 
     class ResponseModel(ResponseBase):
-        config: EndpointConfig #= EndpointConfig()
+        pass
 
     def send_request(self, req: RequestBase) -> ResponseBase:
-        req = self.RequestModel(config=self.config, **req.model_dump())
+        req = self.RequestModel(**req.model_dump())
         with self.connector as c:
             response_dict = c.send(req.model_dump())
         response_dict.update({"config": self.config})
