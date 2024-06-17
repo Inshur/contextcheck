@@ -57,16 +57,24 @@ steps:
         { 
         "key1": [
         {
+        "integer": 1337,
+        "str_integer": "1337",
         "key2": "find_me"}]}
       json3: '{{ json3 }}'
       dict1:
         key1:
           - key2: 'find_me'
+      integer: 1337
+      str_integer: '1337'
     asserts:
       - eval: 'response.json1["key1"][0]["key2"] == "find_me"'
       - eval: 'response.json2["key1"][0]["key2"] == "find_me"'
       - eval: 'response.json3["key1"][0]["key2"] == "find_me"'
       - eval: 'response.dict1["key1"][0]["key2"] == "find_me"'
+      - eval: 'response.json2["key1"][0]["integer"] == 1337'
+      - eval: 'response.json2["key1"][0]["str_integer"] == "1337"'
+      - eval: 'response.integer == 1337'
+      - eval: 'response.str_integer == "1337"'
 
 variables:
   chat_uuid: '0x00'

@@ -9,7 +9,7 @@ fields_computation_map = {"eval": lambda x, context: eval(str(x), context)}
 def replace_str_with_json(d: dict) -> dict:
     """Replace all strings JSON-parsable with corresponding python object."""
     for k, v in d.items():
-        if isinstance(v, str):
+        if isinstance(v, str) and check_beginning_bracket(v):  # Clumsy way to c
             try:
                 d[k] = from_json(v)
             except ValueError:  # Means that string is not json, leave it alone
@@ -19,6 +19,14 @@ def replace_str_with_json(d: dict) -> dict:
         else:
             continue
     return d
+
+
+def check_beginning_bracket(s: str) -> bool:
+    """Check if string starts with bracket."""
+    try:
+        return s.strip()[0] in ("{", "[")
+    except IndexError:
+        return False
 
 
 class RequestBase(BaseModel):
