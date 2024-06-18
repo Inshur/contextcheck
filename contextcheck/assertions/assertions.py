@@ -16,18 +16,15 @@ class AssertionBase(BaseModel):
     def from_obj(cls, obj: dict | str) -> dict:
         # Default assertion without keyword:
         return obj if isinstance(obj, dict) else {"eval": obj}
-    
-    def update_config(self, *args, **kwargs):
-        raise NotImplementedError
 
-    def __call__(self, request: RequestBase, response: ResponseBase, *args, **kwargs) -> bool:
+    def __call__(self, request: RequestBase, response: ResponseBase, eval_endpoint = EndpointBase) -> bool:
         raise NotImplementedError
 
 
 class AssertionEval(AssertionBase):
     eval: str
 
-    def __call__(self, request: RequestBase, response: ResponseBase, *args, **kwargs) -> bool:
+    def __call__(self, request: RequestBase, response: ResponseBase, eval_endpoint = EndpointBase) -> bool:
         if self.result is None:
             try:
                 result = eval(self.eval)
@@ -44,12 +41,7 @@ class AssertionLLM(AssertionBase):
     reference: str = ""
     assertion: str = ""
 
-    def __call__(self, request: RequestBase, response: ResponseBase, *args, **kwargs) -> bool:
-        try:
-            eval_endpoint = kwargs["eval_endpoint"]
-        except KeyError:
-            raise KeyError("LLM-based assertions require 'eval_endpoint' defined in the test scenario.")
-
+    def __call__(self, request: RequestBase, response: ResponseBase, eval_endpoint = EndpointBase) -> bool:
         if self.result is None:
             metric = llm_metric_factory(metric_type=self.llm_metric)
 

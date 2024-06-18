@@ -11,7 +11,9 @@ class EndpointOpenAI(EndpointBase):
     connector: ConnectorOpenAI = ConnectorOpenAI()
 
     def model_post_init(self, __context) -> None:
-        self.connector.config = self.config    
+        self.connector = ConnectorOpenAI(
+            model=self.config.model, **self.connector.model_dump(exclude={"model"})
+        )
 
     class RequestModel(RequestBase):
         @model_serializer
