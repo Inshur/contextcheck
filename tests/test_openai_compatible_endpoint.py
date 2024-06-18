@@ -59,8 +59,8 @@ def test_invalid_config(executor):
 
 @pytest.mark.parametrize("executor", [ollama_config], indirect=True)
 def test_ollama_config(executor):
-    assert executor.endpoint_under_test.connector.config.model == "llama3:8b"
-    assert executor.endpoint_under_test.connector.config.provider == "ChatOllama"
+    assert executor.endpoint_under_test.connector.model == "llama3:8b"
+    assert executor.endpoint_under_test.connector.provider == "ChatOllama"
 
 
 @pytest.mark.ollama
@@ -72,10 +72,10 @@ def test_ollama_result(executor):
 
 @pytest.mark.parametrize("executor", [openai_config], indirect=True)
 def test_openai_config(executor):
-    assert executor.endpoint_under_test.connector.config.model == "gpt-3.5-turbo"
-    assert executor.endpoint_under_test.connector.config.provider == "ChatOpenAI"
-    assert executor.endpoint_under_test.connector.config.temperature == 0.5
-    assert executor.endpoint_under_test.connector.config.max_tokens == 5
+    assert executor.endpoint_under_test.connector.model == "gpt-3.5-turbo"
+    assert executor.endpoint_under_test.connector.provider == "ChatOpenAI"
+    assert executor.endpoint_under_test.connector.temperature == 0.5
+    assert executor.endpoint_under_test.connector.max_tokens == 5
 
 
 @pytest.mark.openai

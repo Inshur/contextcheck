@@ -3,7 +3,6 @@ from langchain import chat_models
 from langchain_community.adapters import openai as openai_compatibile
 
 from contextcheck.connectors.connector import ConnectorBase
-from contextcheck.endpoints.endpoint_config import EndpointConfig
 
 dotenv.load_dotenv()
 
@@ -14,24 +13,27 @@ def check_provider(provider: str) -> None:
 
 
 class ConnectorOpenAICompatible(ConnectorBase):
-    config: EndpointConfig = EndpointConfig()
+    model: str | None = None
+    provider: str | None = None
+    temperature: float | None = None
+    max_tokens: int | None = None
 
     def send(self, data: dict) -> dict:
 
-        if self.config.provider is not None:
-            check_provider(self.config.provider)
+        if self.provider is not None:
+            check_provider(self.provider)
 
         args = {
             "messages": [data],
-            "model": self.config.model,
-            "provider": self.config.provider,
+            "model": self.model,
+            "provider": self.provider,
         }
 
-        if self.config.temperature:
-            args["temperature"] = self.config.temperature
+        if self.temperature:
+            args["temperature"] = self.temperature
 
-        if self.config.max_tokens:
-            args["max_tokens"] = self.config.max_tokens
+        if self.max_tokens:
+            args["max_tokens"] = self.max_tokens
 
         chat_completion = openai_compatibile.chat.completions.create(**args)
         return dict(chat_completion)

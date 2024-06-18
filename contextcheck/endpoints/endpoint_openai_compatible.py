@@ -9,7 +9,13 @@ class EndpointOpenAICompatible(EndpointBase):
     connector: ConnectorOpenAICompatible = ConnectorOpenAICompatible()
 
     def model_post_init(self, __context) -> None:
-        self.connector.config = self.config        
+        self.connector = ConnectorOpenAICompatible(
+            model=self.config.model, 
+            provider=self.config.provider,
+            temperature=self.config.temperature,
+            max_tokens=self.config.max_tokens,
+            **self.connector.model_dump(exclude={"model", "provider", "temperature", "max_tokens"})
+        )    
 
     class RequestModel(EndpointBase.RequestModel):
         @model_serializer
