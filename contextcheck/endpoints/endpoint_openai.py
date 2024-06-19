@@ -2,12 +2,18 @@ from pydantic import model_serializer, model_validator
 
 from contextcheck.connectors.connector_openai import ConnectorOpenAI
 from contextcheck.endpoints.endpoint import EndpointBase
+from contextcheck.models.response import ResponseStats
 from contextcheck.models.request import RequestBase
-from contextcheck.models.response import ResponseBase, ResponseStats
+from contextcheck.models.response import ResponseBase
 
 
 class EndpointOpenAI(EndpointBase):
     connector: ConnectorOpenAI = ConnectorOpenAI()
+
+    def model_post_init(self, __context) -> None:
+        self.connector = ConnectorOpenAI(
+            model=self.config.model, **self.connector.model_dump(exclude={"model"})
+        )
 
     class RequestModel(RequestBase):
         @model_serializer

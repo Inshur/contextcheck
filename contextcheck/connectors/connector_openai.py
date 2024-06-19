@@ -1,13 +1,16 @@
 import os
 
+import dotenv
 from openai import OpenAI
 
 from contextcheck.connectors.connector import ConnectorBase
 
+dotenv.load_dotenv()
+
 
 class ConnectorOpenAI(ConnectorBase):
-    api_key: str = os.environ.get("OPENAI_API_KEY", "")
-    model: str = "gpt-3.5-turbo"
+    api_key: str = os.environ["OPENAI_API_KEY"]
+    model: str | None = None
 
     @property
     def _client(self) -> OpenAI:
@@ -15,7 +18,6 @@ class ConnectorOpenAI(ConnectorBase):
 
     def send(self, data: dict) -> dict:
         chat_completion = self._client.chat.completions.create(
-            messages=[data],  # type: ignore
-            model=self.model,
+            messages=[data], model=self.model  # type: ignore
         )
         return chat_completion.to_dict()

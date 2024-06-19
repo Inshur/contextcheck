@@ -1,6 +1,10 @@
 from pydantic import BaseModel, ConfigDict, model_validator
 
+from contextcheck.assertions.metrics import LLMMetricEvaluator, llm_metric_factory
+from contextcheck.endpoints.endpoint import EndpointBase
+from contextcheck.models.request import RequestBase
 from contextcheck.models.response import ResponseBase
+
 
 
 class AssertionBase(BaseModel):
@@ -13,14 +17,14 @@ class AssertionBase(BaseModel):
         # Default assertion without keyword:
         return obj if isinstance(obj, dict) else {"eval": obj}
 
-    def __call__(self, response: ResponseBase) -> bool:
+    def __call__(self, request: RequestBase, response: ResponseBase, eval_endpoint = EndpointBase) -> bool:
         raise NotImplementedError
 
 
 class AssertionEval(AssertionBase):
     eval: str
 
-    def __call__(self, response: ResponseBase) -> bool:
+    def __call__(self, request: RequestBase, response: ResponseBase, eval_endpoint = EndpointBase) -> bool:
         if self.result is None:
             try:
                 result = eval(self.eval)
@@ -29,4 +33,26 @@ class AssertionEval(AssertionBase):
             if not isinstance(result, bool):
                 raise ValueError(f"Given eval `{self.eval}` does not evaluate to bool.")
             self.result = result
+        return self.result
+    
+
+class AssertionLLM(AssertionBase):
+    llm_metric: str
+    reference: str = ""
+    assertion: str = ""
+
+    def __call__(self, request: RequestBase, response: ResponseBase, eval_endpoint = EndpointBase) -> bool:
+        if self.result is None:
+            metric = llm_metric_factory(metric_type=self.llm_metric)
+
+            self.metric_evaluator = LLMMetricEvaluator(
+                eval_endpoint=eval_endpoint, metric=metric # type: ignore
+            )
+
+            self.result = self.metric_evaluator.evaluate(
+                input=request.message, # type: ignore
+                output=response.message, # type: ignore
+                **self.model_dump(exclude={"llm_metric", "result"})
+            )
+
         return self.result

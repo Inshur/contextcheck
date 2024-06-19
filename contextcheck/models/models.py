@@ -5,7 +5,7 @@ from pydantic import BaseModel, BeforeValidator, field_validator, model_validato
 
 from contextcheck.assertions.assertions import AssertionBase
 from contextcheck.assertions.factory import factory as assertions_factory
-from contextcheck.endpoints.endpoint import EndpointConfig
+from contextcheck.endpoints.endpoint_config import EndpointConfig
 from contextcheck.loaders.yaml import load_yaml_file
 from contextcheck.models.request import RequestBase
 from contextcheck.models.response import ResponseBase
@@ -14,6 +14,7 @@ from contextcheck.models.response import ResponseBase
 class TestConfig(BaseModel):
     endpoint_under_test: EndpointConfig = EndpointConfig()
     default_request: RequestBase | None = None
+    eval_endpoint: EndpointConfig | None = None
 
 
 class TestStep(BaseModel):

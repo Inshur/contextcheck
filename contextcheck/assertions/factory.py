@@ -1,7 +1,12 @@
-from contextcheck.assertions.assertions import AssertionBase, AssertionEval
+from contextcheck.assertions.assertions import (
+    AssertionBase,
+    AssertionEval,
+    AssertionLLM,
+)
 
 assertions_map = {
     "eval": AssertionEval,
+    "llm_metric": AssertionLLM,
 }
 
 
