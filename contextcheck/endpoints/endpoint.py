@@ -21,6 +21,7 @@ class EndpointBase(BaseModel):
         req = self.RequestModel(**req.model_dump())
         with self.connector as c:
             response_dict = c.send(req.model_dump())
+        response_dict.update({"config": self.config})
         response = self.ResponseModel.model_validate(response_dict)
 
         # Add connector stats to response stats:

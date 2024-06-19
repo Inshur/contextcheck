@@ -27,9 +27,16 @@ Use env variable `OPENAI_API_KEY` to be able to run:
 
 ## Tests
 
-Only end-to-end tests are currently available. Feel free to add some.
+Only end-to-end tests are currently available.
 
 To run tests:
 ```
 poetry run pytest tests/
+```
+
+To include tests which require calling LLM APIs (currently OpenAI and Ollama), run one of: 
+```
+poetry run pytest --openai          # includes tests that use OpenAI API
+poetry run pytest --ollama          # includes tests that use Ollama API
+poetry run pytest --openai --ollama # includes tests that use both OpenAI and Ollama API
 ```

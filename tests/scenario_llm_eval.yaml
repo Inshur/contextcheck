@@ -2,9 +2,17 @@ config:
   endpoint_under_test:
     kind: openai
     # model: gpt-3.5-turbo
+    # Alternative, local evaluator
+    # kind: openai_compatible
+    # provider: ChatOllama 
+    # model: llama3:8b
   eval_endpoint:
     kind: openai
     # model: gpt-3.5-turbo
+    # Alternative, local evaluator
+    # kind: openai_compatible
+    # provider: ChatOllama
+    # model: llama3:8b
 
 
 steps:
