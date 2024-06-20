@@ -14,7 +14,14 @@ def load_yaml_file(file_path: Path, parse_template: bool = True) -> dict:
 
     if parse_template:
         # Get variables from original yaml:
-        yaml_dict_without_template = yaml.safe_load(yaml_content)
+        try:
+            yaml_dict_without_template = yaml.safe_load(yaml_content)
+        except yaml.scanner.ScannerError as e: # type: ignore
+            message = ("Yaml parsing error. It was probably caused by your 'regex' assertion " 
+                f"defined with double-quotes.\nUse single quotes or no quotes to fix it.\nError details:\n\n{e}")
+            raise ValueError(message)
+            
+        
         variables = yaml_dict_without_template.get("variables", {})
 
         # Some variables text can be multiline, so we need to replace newlines with spaces

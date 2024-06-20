@@ -1,9 +1,10 @@
 from pathlib import Path
-
+import pytest
 from contextcheck import TestScenario
 from contextcheck.endpoints.endpoint_config import EndpointConfig
 from contextcheck.endpoints.endpoint_dummy_echo import EndpointDummyEcho
 from contextcheck.executors.executor import Executor
+from tests.utils import executor
 
 
 def test_load_scenario_from_yaml():
@@ -68,3 +69,41 @@ def test_run():
 
     # JSON parsing
     assert all(a.result for a in ts.steps[5].asserts)
+
+
+config_parsing_as_string = """
+config:
+    endpoint_under_test:
+        kind: echo
+
+steps:
+  - name: test parsing as json
+    request: '{"Hello": "World"}'
+"""
+
+
+@pytest.mark.parametrize("executor", [config_parsing_as_string], indirect=True)
+def test_parsing_as_string(executor):
+    executor.run_all()
+    assert executor.test_scenario.steps[0].response.message == '{"Hello": "World"}'
+
+
+config_parsing_as_json_2 = """
+config:
+    endpoint_under_test:
+        kind: echo
+    default_request:
+        parse_response_as_json: true        
+
+steps:
+  - name: test parsing as json
+    request: '{"Hello": "World"}'
+"""
+
+
+@pytest.mark.parametrize("executor", [config_parsing_as_json_2], indirect=True)
+def test_failing_parsing_as_json(executor):
+    with pytest.raises(
+        ValueError, match="You see this error because of incorrect response parsing"
+    ):
+        executor.run_all()
