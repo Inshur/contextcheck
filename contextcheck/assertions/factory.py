@@ -8,7 +8,7 @@ from contextcheck.assertions.assertions import (
 assertions_map = {
     "eval": AssertionEval,
     "llm_metric": AssertionLLM,
-    "type": AssertionDeterministic,
+    "kind": AssertionDeterministic,
 }
 
 

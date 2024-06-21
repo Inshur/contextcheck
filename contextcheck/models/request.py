@@ -9,7 +9,7 @@ fields_computation_map = {"eval": lambda x, context: eval(str(x), context)}
 def replace_str_with_json(d: dict) -> dict:
     """Replace all strings JSON-parsable with corresponding python object."""
 
-    if d.get("parse_response_as_json") == True:
+    if "parse_response_as_json" in d:
         for k, v in d.items():
             if isinstance(v, str) and check_beginning_bracket(v):  # Clumsy way to c
                 try:

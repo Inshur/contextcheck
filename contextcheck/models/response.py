@@ -35,10 +35,9 @@ class ResponseBase(BaseModel):
     @classmethod
     def from_obj(cls, obj: dict) -> dict:
         if (
-            obj.get("parse_response_as_json")
+            obj.get("parse_response_as_json", False)
             and obj.get("message")
             and isinstance(obj["message"], dict)
-            and obj["parse_response_as_json"] == True
         ):
             raise ValueError(error_message)
         return obj

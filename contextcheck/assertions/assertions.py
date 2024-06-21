@@ -90,7 +90,7 @@ deterministic_metrics = {
 
 
 class AssertionDeterministic(AssertionBase):
-    type: str
+    kind: str
     assertion: str | list[str] | dict | None = None
 
     def __call__(
@@ -98,9 +98,9 @@ class AssertionDeterministic(AssertionBase):
     ) -> bool:
         if self.result is None:
 
-            if self.type in deterministic_metrics:
-                self.result = deterministic_metrics[self.type](self.assertion, response.message)
+            if self.kind in deterministic_metrics:
+                self.result = deterministic_metrics[self.kind](self.assertion, response.message)
             else:
-                raise ValueError(f"Given type `{self.type}` is not a deterministic metric.")
+                raise ValueError(f"Given kind `{self.kind}` is not a deterministic metric.")
 
         return self.result  # type: ignore

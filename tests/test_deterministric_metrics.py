@@ -14,11 +14,11 @@ steps:
   - name: test contains and icontains
     request: 'Foo bar'
     asserts:
-      - type: contains
+      - kind: contains
         assertion: 'Foo'
-      - type: contains
+      - kind: contains
         assertion: 'something else'
-      - type: icontains
+      - kind: icontains
         assertion: 'foo'
 """
 
@@ -44,11 +44,11 @@ steps:
   - name: test contains-all and icontains-all
     request: 'Quick brown fox jumps over the lazy dog'
     asserts:
-      - type: contains-all
+      - kind: contains-all
         assertion: ['Quick', 'fox']
-      - type: contains-all
+      - kind: contains-all
         assertion: ['Quick', 'something else']
-      - type: icontains-all
+      - kind: icontains-all
         assertion: ['quick', 'fox']
 """
 
@@ -74,11 +74,11 @@ steps:
   - name: test contains-any and icontains-any
     request: 'Quick brown fox jumps over the lazy dog'
     asserts:
-      - type: contains-any
+      - kind: contains-any
         assertion: ['Quick', 'something else']
-      - type: contains-any
+      - kind: contains-any
         assertion: ['something else', 'and', 'more']
-      - type: icontains-any
+      - kind: icontains-any
         assertion: ['quick', 'something else']
 """
 
@@ -104,7 +104,7 @@ steps:
   - name: test is-valid-json
     request: '{"name": "John", "age": 30}'
     asserts:
-      - type: is-valid-json
+      - kind: is-valid-json
 """
 
 
@@ -125,7 +125,7 @@ steps:
   - name: test has-valid-json-schema
     request: '{"name": "John", "age": 30}'
     asserts:
-      - type: has-valid-json-schema
+      - kind: has-valid-json-schema
         assertion: 
             type: object
             properties:
@@ -136,7 +136,7 @@ steps:
                     minimum: 0
                     maximum: 150
             required: ["name", "age"]
-      - type: has-valid-json-schema
+      - kind: has-valid-json-schema
         assertion: 
             type: object
             properties:
@@ -169,7 +169,7 @@ steps:
   - name: test is-valid-json
     request: 'Foo'
     asserts:
-      - type: equals
+      - kind: equals
         assertion: 'Foo'
 """
 
@@ -190,9 +190,9 @@ steps:
   - name: test regex
     request: 'Foo16 bar'
     asserts:
-      - type: regex
+      - kind: regex
         assertion: '^\w+\d{2} \w+$'
-      - type: regex
+      - kind: regex
         assertion: \d+
 """
 
@@ -214,7 +214,7 @@ steps:
   - name: test regex
     request: 'Foo16 bar'
     asserts:
-      - type: regex
+      - kind: regex
         assertion: "\w+" # This fails because regex is in double quotes
 """
 
