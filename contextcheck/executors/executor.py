@@ -77,5 +77,5 @@ class Executor:
         """Update executor context to store global execution data."""
         self.context.update(data)
 
-    def summary(self):
-        self.ui.summary(self)
+    def summary(self, **kwargs: dict[str, str]):
+        self.ui.summary(self, **kwargs)

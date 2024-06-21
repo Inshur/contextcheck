@@ -11,5 +11,5 @@ class InterfaceBase(BaseModel):
         logger.info(obj)
 
     @staticmethod
-    def summary(obj: Any) -> Any:
+    def summary(obj: Any, **kwargs: Any) -> Any:
         logger.info(obj)
