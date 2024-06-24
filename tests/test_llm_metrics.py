@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pytest
 
 from contextcheck import TestScenario
@@ -6,7 +7,7 @@ from contextcheck.executors.executor import Executor
 
 
 @pytest.mark.openai
-def test_evals():
+def test_llm_metrics():
     ts = TestScenario.from_yaml(Path("tests/scenario_llm_eval.yaml"))
     executor = Executor(ts)
     executor.run_all()

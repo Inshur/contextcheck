@@ -1,9 +1,6 @@
-from pathlib import Path
 import pytest
-from tempfile import NamedTemporaryFile
 
-from contextcheck import TestScenario
-from contextcheck.executors.executor import Executor
+from tests.utils import executor
 
 invalid_config = """
 config:
@@ -39,16 +36,6 @@ config:
       temperature: 0.5
       max_tokens: 5
 """
-
-
-@pytest.fixture
-def executor(request):
-    with NamedTemporaryFile("w", suffix=".yaml") as f:
-        f.write(request.param)
-        f.flush()
-
-        ts = TestScenario.from_yaml(Path(f.name))
-        return Executor(ts)
 
 
 @pytest.mark.parametrize("executor", [invalid_config], indirect=True)

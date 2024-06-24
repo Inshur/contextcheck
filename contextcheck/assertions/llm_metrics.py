@@ -1,5 +1,3 @@
-from typing import Type
-
 from pydantic import BaseModel
 
 from contextcheck.assertions.llm_eval_prompts import (

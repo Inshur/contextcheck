@@ -48,6 +48,7 @@ steps:
   - name: Pass JSON in a different ways # This demonstrates how to pass json data
     request:
       message: 'This contains json'
+      parse_response_as_json: true
       json1: >
         { 
         "key1": [

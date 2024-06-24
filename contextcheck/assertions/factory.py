@@ -2,11 +2,13 @@ from contextcheck.assertions.assertions import (
     AssertionBase,
     AssertionEval,
     AssertionLLM,
+    AssertionDeterministic,
 )
 
 assertions_map = {
     "eval": AssertionEval,
     "llm_metric": AssertionLLM,
+    "kind": AssertionDeterministic,
 }
 
 

@@ -8,16 +8,19 @@ fields_computation_map = {"eval": lambda x, context: eval(str(x), context)}
 
 def replace_str_with_json(d: dict) -> dict:
     """Replace all strings JSON-parsable with corresponding python object."""
-    for k, v in d.items():
-        if isinstance(v, str) and check_beginning_bracket(v):  # Clumsy way to c
-            try:
-                d[k] = from_json(v)
-            except ValueError:  # Means that string is not json, leave it alone
-                pass
-        elif isinstance(v, dict):
-            d[k] = replace_str_with_json(v)
-        else:
-            continue
+
+    if "parse_response_as_json" in d:
+        for k, v in d.items():
+            if isinstance(v, str) and check_beginning_bracket(v):  # Clumsy way to c
+                try:
+                    d[k] = from_json(v)
+                except ValueError:  # Means that string is not json, leave it alone
+                    pass
+            elif isinstance(v, dict):
+                d[k] = replace_str_with_json(v)
+            else:
+                continue
+
     return d
 
 
