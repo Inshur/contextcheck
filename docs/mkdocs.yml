@@ -1,0 +1,26 @@
+site_name: ContextCheck
+site_url: 'https://TBD'
+theme:
+  name: readthedocs
+
+plugins:
+  - search:
+      min_search_length: 2
+  - mkdocstrings:
+      handlers:
+        python:
+          load_external_modules: true
+          paths: [../contextcheck]
+          options:
+            docstring_style: numpy
+      
+nav:
+  - 'Home': index.md
+  - 'Getting Started':
+    - 'Installation': getting_started/installation.md
+    - 'Quick Start': getting_started/quick_start.md
+  - 'User Guide':
+    - 'Understanding YAML test syntax': user_guide/understanding_yaml_syntax.md
+    - 'Standard metrics': user_guide/standard_metrics.md
+    - 'LLM-based metrics': user_guide/llm_metrics.md
+    - 'Variables': user_guide/variables.md
