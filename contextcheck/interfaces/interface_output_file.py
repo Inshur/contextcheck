@@ -20,7 +20,6 @@ class InterfaceOutputFile(InterfaceBase):
         date_now = datetime.now(timezone.utc)
         output_path = f"{output_folder}/{filename}_{date_now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
 
-        #res = executor.test_scenario.model_dump_json(indent=4)
         res = executor.test_scenario.model_dump()
         res['global_test_timestamp'] = global_test_timestamp
         res['test_timestamp'] = str(datetime.timestamp(date_now))

@@ -56,11 +56,19 @@ class InterfaceTUI(InterfaceBase):
         table.add_column("Valid")
 
         for step in executor.test_scenario.steps:
+            step_result = ""
+            if step.result is None:
+                step_result = "[yellow]SKIPPED"
+            elif step.result:
+                step_result = "[green]OK"
+            else:
+                step_result = "[red]FAIL"
+
             table.add_row(
                 Pretty(step.request),
                 Pretty(step.response),
                 Pretty(step.asserts),
-                "[green]OK" if step.result else "[red]FAIL",
+                step_result,
             )
 
         print(table)

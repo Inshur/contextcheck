@@ -52,7 +52,6 @@ def main():
     args = parser.parse_args()
     parser.validate_args(args)
 
-    print(vars(args))
     TestsRouter(**vars(args)).run_tests()
 
 

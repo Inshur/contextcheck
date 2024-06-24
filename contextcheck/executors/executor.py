@@ -22,16 +22,19 @@ class Executor:
         self,
         test_scenario: TestScenario,
         ui: InterfaceBase | None = None,
+        exit_on_failure: bool = False,
     ) -> None:
         self.test_scenario = test_scenario
         self.context: dict = {}
         self.ui = ui or InterfaceBase()
+        self.exit_on_failure = exit_on_failure
         self.endpoint_under_test = endpoint_factory(self.test_scenario.config.endpoint_under_test)
         self.eval_endpoint = (
             endpoint_factory(self.test_scenario.config.eval_endpoint)
             if self.test_scenario.config.eval_endpoint
             else None
         )
+        self.early_stop = False
 
     def run_all(self) -> bool | None:
         """Run all test steps sequentially."""
@@ -39,13 +42,20 @@ class Executor:
         result = True
         for test_step in self.run_steps():
             result &= bool(test_step.result)
+            if self.early_stop:
+                break            
         self.test_scenario.result = result
         return result
 
-    def run_steps(self) -> Generator[TestStep, None, None]:
+    def run_steps(self) -> list[TestStep]:
         """Run and yield steps iteratively."""
+        step_results = []
         for test_step in self.test_scenario.steps:
-            yield self._run_step(test_step)
+            if self.early_stop:
+                break            
+            step = self._run_step(test_step)
+            step_results.append(step)
+        return step_results
 
     def _run_step(self, test_step: TestStep) -> TestStep:
         """Run a given step and update result."""
@@ -70,6 +80,9 @@ class Executor:
                 logger.error(f"Error during assertion: {e}")
                 result = False
             self.ui(assertion)
+            if result is False and self.exit_on_failure:
+                self.early_stop = True
+                break
         test_step.result = result
         return test_step
 
