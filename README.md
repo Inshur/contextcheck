@@ -14,12 +14,56 @@ Framework for LLM/RAG testing.
 - Dynamic fields using `eval` - including passing fields from last response
 - Pretty printing using `rich` package
 
-## Getting started
+## Getting Started
 
-For now, this is just:
-```
-poetry run python main_tui.py tests/scenario_echo.yaml
-```
+1. **Setup and initialize Poetry.**
+
+2. **Activate the `ccheck` CLI command** using:
+   ```sh
+   poetry run ccheck
+   ```
+
+3. **Discover available options** by running:
+   ```sh
+   ccheck --help
+   ```
+
+### The `ccheck` Command Features
+
+#### Output Test Results to Console
+
+- **Run a single scenario and output results to the console:**
+  ```sh
+  ccheck --output-type console --filename path/to/file.yaml
+  ```
+- **Run multiple scenarios and output results to the console:**
+  ```sh
+  ccheck --output-type console --filename path/to/file.yaml path/to/another_file.yaml
+  ```
+- **Run all scenarios from a folder and output results to the console:**
+  ```sh
+  ccheck --output-type console --folder my_tests
+  ```
+
+#### Output Test Results to JSON Files
+
+The `--output-type file` option works similarly to `--output-type console`. It requires either `--filename` or `--folder`, and also an `--output-folder` where the test results will be saved. Each test scenario will be saved as a separate JSON file with the current date and time included in the filename.
+
+- **Example:**
+  ```sh
+  ccheck --output-type file --folder my_tests --output-folder test_results
+  ```
+
+#### Running in CI/CD
+
+To automatically stop the CI/CD process if any tests fail, add the `--exit-on-failure` flag. Failed test will cause the script to exit with code 1.
+
+- **Example:**
+  ```sh
+  ccheck --exit-on-failure --output-type console --folder my_tests
+  ```
+
+
 
 Use env variable `OPENAI_API_KEY` to be able to run:
 - `tests/scenario_openai.yaml`
