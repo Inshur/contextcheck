@@ -11,3 +11,7 @@ class EndpointConfig(BaseModel):
     provider: str | None = None
     temperature: float | None = None
     max_tokens: int | None = None
+
+    top_k: int = 3
+    use_ranker: bool = True
+    collection_name: str = "default"

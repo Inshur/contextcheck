@@ -1,0 +1,23 @@
+config:
+  endpoint_under_test:
+    kind: cc_ss
+    url: 'http://127.0.0.1:8000/api/v1/semantic_search/get_relevant_documents'
+    additional_headers:
+      testtest: testtest
+    default_request:
+      top_k: 3
+      use_ranker: False
+      collection_name: default
+
+
+
+steps:
+
+  - name: Who is Edwin
+    request: 'Who is Edwin'
+    asserts:
+      - 'response.relevant_documents != None'
+      - 'len(response.relevant_documents) > 0'
+      - 'len(response.relevant_documents["collection_retriever_entries"]) > 0'
+      - 'type(response.relevant_documents["collection_retriever_entries"][0]["chunk"]) == str'
+      - '"Edwin" in response.relevant_documents["collection_retriever_entries"][0]["chunk"]'
