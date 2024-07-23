@@ -1,3 +1,5 @@
+from typing import Dict, Optional
+
 import requests
 
 from contextcheck.connectors.connector import ConnectorBase
@@ -10,14 +12,14 @@ class ConnectorHTTP(ConnectorBase):
     timeout: int = 30
 
     def send(
-        self, data: dict, params: dict | None = None, timeout: int | None = None
+        self, data: dict, json: bool = True, params: dict | None = None, timeout: int | None = None
     ) -> dict:
-        params = params or {}
         response = requests.post(
             url=self.url,
-            json=data,
+            json=data if json else None,
+            data=data if not json else None,
             params=params,
-            timeout=timeout or self.timeout,
+            timeout=self.timeout,
             headers=self.additional_headers,
         )
         response.raise_for_status()

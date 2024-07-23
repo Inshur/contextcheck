@@ -3,14 +3,24 @@ config:
       kind: cc_prompt_llm
       url: 'http://127.0.0.1:8000/api/v1/qa/prompt_llm'
       additional_headers:
-         tesettest: testtests
+         testtest: testtest
+      default_request:
+        top_k: 3
+        use_ranker: False
+        collection_name: default
+        rag_config:
+          temperature: 0
+          llm: openai
+          top_k: 3
+
+
 
 steps:
-   - "Write 'success' in the response"
-   - 'What is the capital of Poland?'
-   - "Write 'fail' in the response"
-   - "Write 'success' in the response"
-   - name: Send hello
-     request: 'Change pax count to 4!'
-     assert:
-        - eval: 'response.stats.duration_context < 3'
+  - "Write 'success' in the response"
+  - 'What is the capital of Poland?'
+  - "Write 'fail' in the response"
+  - "Write 'success' in the response"
+  - name: Send hello
+    request: 'Change pax count to 4!'
+    assert:
+      - eval: 'response.stats.duration_context < 3'
