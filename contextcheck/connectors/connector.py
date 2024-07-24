@@ -14,6 +14,7 @@ class ConnectorBase(BaseModel):
 
     def __enter__(self):
         self.stats.conn_start_time = time.perf_counter()
+        self.stats.conn_end_time = None
         return self
 
     def __exit__(self, type, value, traceback):

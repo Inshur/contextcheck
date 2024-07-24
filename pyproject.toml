@@ -20,6 +20,7 @@ loguru = "^0.7.2"
 pylint = "^3.2.3"
 black = "^24.4.2"
 isort = "^5.13.2"
+fsspec = "2024.3.1"
 pre-commit = "^3.7.1"
 
 mkdocs = { version = "^1.5.3", optional = true }
@@ -37,6 +38,7 @@ docs = [
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
+lorem = "^0.1.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -91,3 +93,7 @@ disable = [
     "too-many-ancestors",
     "unexpected-special-method-signature",
 ]
+
+[tool.poetry.scripts]
+ccheck = "contextcheck.run_tests:main"
+questions_generator = "contextcheck.questions_generator:main"

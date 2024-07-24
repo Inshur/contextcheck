@@ -51,6 +51,7 @@ class TestScenario(BaseModel):
     steps: list[TestStep] = []
     config: Annotated[TestConfig, BeforeValidator(lambda x: {} if x is None else x)]
     result: bool | None = None
+    filename: str | None = None
 
     @classmethod
     def from_yaml(cls, file_path: Path) -> Self:
@@ -60,5 +61,5 @@ class TestScenario(BaseModel):
         config = TestConfig.model_validate(cls_dict.get("config", {}) or {})
         if config.default_request:
             TestStep.default_request = config.default_request
-
+        cls_dict['filename'] = file_path.name 
         return cls.model_validate(cls_dict)
