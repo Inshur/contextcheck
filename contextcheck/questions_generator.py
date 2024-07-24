@@ -80,8 +80,8 @@ def main():
     parser.add_argument(
         "--llm-model",
         type=str,
-        default="gpt-3.5-turbo",
-        help="LLM model to use. Default one is GPT-3.5-turbo.",
+        default="gpt-4o-mini",
+        help="LLM model to use. Default one is GPT-4o-Mini.",
     )
 
     args = parser.parse_args(args=None if sys.argv[1:] else ["--help"])

@@ -15,12 +15,18 @@ plugins:
             docstring_style: numpy
       
 nav:
-  - 'Home': index.md
-  - 'Getting Started':
-    - 'Installation': getting_started/installation.md
-    - 'Quick Start': getting_started/quick_start.md
-  - 'User Guide':
-    - 'Understanding YAML test syntax': user_guide/understanding_yaml_syntax.md
-    - 'Standard metrics': user_guide/standard_metrics.md
-    - 'LLM-based metrics': user_guide/llm_metrics.md
-    - 'Variables': user_guide/variables.md
+  - 'Getting started': index.md
+  - 'Core concepts':
+    - 'Applications and use cases': getting_started/applications_and_use_cases.md
+    - 'LLM prompts validation process': getting_started/lmm_prompts_validation.md
+    - 'RAG system validation process': getting_started/rag_system_validation.md
+    - 'Full-cycle process': getting_started/full_cycle_process.md
+  - 'User guide':
+    - 'About metrics': user_guide/metrics.md
+    - 'Deterministic metrics': user_guide/deterministic_metrics.md
+    - 'LLM-based metrics': user_guide/llm_based_metrics.md
+    - 'Understanding test scenarios': user_guide/test_scenarios.md
+    - 'Synthetic questions generator': user_guide/questions_generator.md
+    - 'RAG configuration': user_guide/rag_configuration.md
+
+

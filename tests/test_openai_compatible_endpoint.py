@@ -32,7 +32,7 @@ config:
    endpoint_under_test:
       kind: openai_compatible
       provider: ChatOpenAI
-      model: gpt-3.5-turbo
+      model: gpt-4o-mini
       temperature: 0.5
       max_tokens: 5
 """
@@ -59,7 +59,7 @@ def test_ollama_result(executor):
 
 @pytest.mark.parametrize("executor", [openai_config], indirect=True)
 def test_openai_config(executor):
-    assert executor.endpoint_under_test.connector.model == "gpt-3.5-turbo"
+    assert executor.endpoint_under_test.connector.model == "gpt-4o-mini"
     assert executor.endpoint_under_test.connector.provider == "ChatOpenAI"
     assert executor.endpoint_under_test.connector.temperature == 0.5
     assert executor.endpoint_under_test.connector.max_tokens == 5
