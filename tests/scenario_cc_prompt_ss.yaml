@@ -4,10 +4,10 @@ config:
     url: 'http://127.0.0.1:8000/api/v1/semantic_search/get_relevant_documents'
     additional_headers:
       testtest: testtest
-    default_request:
-      top_k: 3
-      use_ranker: False
-      collection_name: default
+  default_request:
+    top_k: 3
+    use_ranker: False
+    collection_name: default
 
 
 
