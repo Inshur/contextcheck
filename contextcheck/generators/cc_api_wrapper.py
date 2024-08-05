@@ -32,13 +32,33 @@ class ContextClueApiWrapper(RagApiWrapperBase):
 
         return response.json()["document"]["chunks"]
 
-    def query_semantic_db(self, query: str) -> List[str]:
+    def query_semantic_db(self, query: str, **kwargs) -> List[str]:
         response = requests.post(
             f"{self.endpoint_base_url}/semantic_search/get_relevant_documents",
-            data={"query": query, "top_k": self.top_k},
+            json={"query": query,
+                  "top_k": kwargs.get("top_k", 3),
+                  "alpha": kwargs.get("alpha", 0.75),
+                  "use_ranker": kwargs.get("use_ranker", True),
+                  },
             headers=self.headers,
         )
         response.raise_for_status()
-
         chunks = response.json()["relevant_documents"]["collection_retriever_entries"]
-        return [chunk["chunk"] for chunk in chunks]
+        return chunks
+
+    def query_qa(self, query: str, **kwargs) -> List[str]:
+        response = requests.post(
+            f"{self.endpoint_base_url}/qa/ask",
+            json={"query": query,
+                  "alpha": kwargs.get("alpha", 0.75),
+                  "rag_config": {
+                      "temperature": 0,
+                      "llm": "openai",
+                      "top_k": 3
+                  }
+                  },
+            headers=self.headers,
+        )
+        response.raise_for_status()
+        answers = response.json()
+        return answers

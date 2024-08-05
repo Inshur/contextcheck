@@ -1,16 +1,9 @@
 from argparse import ArgumentParser
-from importlib import import_module
 import sys
 
 from contextcheck.endpoints.endpoint_config import EndpointConfig
 from contextcheck.generators.generate_questions import QuestionsGenerator
-
-
-def import_class_from_string(path):
-    module_path, class_name = path.rsplit(".", 1)
-    module = import_module(module_path)
-    clazz = getattr(module, class_name)
-    return clazz
+from contextcheck.generators.utils import import_class_from_string
 
 
 def generate_questions(
@@ -62,13 +55,13 @@ def main():
     parser.add_argument(
         "--num-topics",
         type=int,
-        default=10,
+        default=3,
         help="Number of topics generated for each file. Default is 10",
     )
     parser.add_argument(
         "--questions-per-topic",
         type=int,
-        default=3,
+        default=2,
         help="Number of questions generater per each topic. Default is 3.",
     )
     parser.add_argument(

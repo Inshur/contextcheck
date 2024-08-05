@@ -1,0 +1,123 @@
+config:
+  endpoint_under_test:
+    kind: cc_ss
+    url: 'http://127.0.0.1:8000/api/v1/qa/ask'
+    additional_headers:
+      testtest: testtest
+  default_request:
+    top_k: 3
+    use_ranker: False
+    collection_name: default
+    rag_config:
+      temperature: 0
+      llm: openai
+      top_k: 3
+
+
+
+steps:
+  - name: Who is Edwin
+    request: 'Who is Edwin'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - 'type(response.result) == str'
+      - '"Edwin" in response.result'
+      - '"CGO" in response.result'
+      - '"co-founder" in response.result'
+
+  - name: How much AI can contribute to global economy in 2030?
+    request: 'How much AI can contribute to global economy in 2030?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - 'type(response.result) == str'
+      - '"$15.7 trillion" in response.result'
+
+  - name: How much MyBenefit points do I have every month?
+    request: 'How much MyBenefit points do I have every month?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - 'type(response.result) == str'
+      - '"231" in response.result'
+
+  - name: Who shall I contact in case of business travel
+    request: 'Who shall I contact in case of business travel?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - 'type(response.result) == str'
+      - '"travel@addepto.com" in response.result'
+
+  - name: What is the contact information of Marcin Marczyk
+    request: 'What is the contact information of Marcin Marczyk?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - 'type(response.result) == str'
+      - '"784 494 108" in response.result'
+      - '"marcin.marczyk@addepto.com" in response.result'
+
+  - name: How to fight to the moon?
+    request: 'How to fight to the moon?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - 'type(response.result) == str'
+
+  - name: What is 404 server error?
+    request: 'What is 404 server error?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - 'type(response.result) == str'
+
+  - name: Who is the teacher of Polish language
+    request: 'Who is the teacher of Polish language?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - 'type(response.result) == str'
+      - '"Agnieszka" in response.result'
+
+  - name: How far in advance should I request a vacation
+    request: 'How far in advance should I request a vacation?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - 'type(response.result) == str'
+      - '"2 weeks" in response.result'
+
+  - name: Is there an IT support
+    request: 'Is there an IT support?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - 'type(response.result) == str'
+      - '"ITCenter" in response.result'
+      - '"Konrad Maliński" in response.result'
+      - '"48 502 300 417" in response.result'
+      - '"Piotr Suszek" in response.result'
+      - '"48 502 200 767" in response.result'
+
+  - name: How many appointments are available per month through Wellbee
+    request: 'How many appointments are available per month through Wellbee?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - '"2" in response.result'
+
+  - name: What is addepto's career path
+    request: 'What is addeptos career path?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - '"system of career paths so that you can develop" in response.result'
+
+  - name: How much can Addepto co-finance for new glasses or contact lenses for UoP/UZ employees?
+    request: 'How much can Addepto co-finance for new glasses or contact lenses for UoP/UZ employees?'
+    asserts:
+      - 'response.result != None'
+      - 'len(response.result) > 0'
+      - '"450" in response.result'
