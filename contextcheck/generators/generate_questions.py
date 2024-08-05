@@ -68,13 +68,13 @@ class QuestionsGenerator(BaseModel):
 
         return topics_ls
 
-    def _prepare_request(self, chunks: list[str]) -> RequestBase:
+    def _prepare_request(self, chunks: list[dict]) -> RequestBase:
         if self.questions_per_topic > 1:
             prompt = PROMPT_QUESTIONS.format(num_questions=self.questions_per_topic)
         else:
             prompt = PROMPT_SINGLE_QUESTION
 
-        chunks_joined = "\n---\n".join(chunks)
+        chunks_joined = "\n---\n".join([chunk["chunk"] for chunk in chunks])
         message = f"{chunks_joined}.\n\n------\n{prompt}"
         return RequestBase(message=message)
 

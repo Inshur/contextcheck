@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 
 class RagApiWrapperBase(BaseModel, ABC):
-    top_k: int = 5
 
     @abstractmethod
     def list_documents(self) -> List[dict[str, str]]:
@@ -25,9 +24,17 @@ class RagApiWrapperBase(BaseModel, ABC):
         pass
 
     @abstractmethod
-    def query_semantic_db(self, query: str) -> List[str]:
+    def query_semantic_db(self, query: str, **kwargs) -> List[str]:
         """
         Query the semantic database through the RAG API.
         Returns a list of strings, each representing a result of the query.
+        """
+        pass
+
+    @abstractmethod
+    def query_qa(self, question: str, **kwargs) -> List[str]:
+        """
+        Query the question answering model through the RAG API.
+        Returns a list of strings, each representing an answer to the question.
         """
         pass
