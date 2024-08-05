@@ -2,7 +2,7 @@ config:
    endpoint_under_test:
       kind: openai
       # Optional model name
-      # model: gpt-3.5-turbo
+      # model: gpt-4o-mini
 
 steps:
    - 'Write success in the response'

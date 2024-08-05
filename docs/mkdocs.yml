@@ -1,0 +1,32 @@
+site_name: ContextCheck
+site_url: 'https://TBD'
+theme:
+  name: readthedocs
+
+plugins:
+  - search:
+      min_search_length: 2
+  - mkdocstrings:
+      handlers:
+        python:
+          load_external_modules: true
+          paths: [../contextcheck]
+          options:
+            docstring_style: numpy
+      
+nav:
+  - 'Getting started': index.md
+  - 'Core concepts':
+    - 'Applications and use cases': getting_started/applications_and_use_cases.md
+    - 'LLM prompts validation process': getting_started/lmm_prompts_validation.md
+    - 'RAG system validation process': getting_started/rag_system_validation.md
+    - 'Full-cycle process': getting_started/full_cycle_process.md
+  - 'User guide':
+    - 'About metrics': user_guide/metrics.md
+    - 'Deterministic metrics': user_guide/deterministic_metrics.md
+    - 'LLM-based metrics': user_guide/llm_based_metrics.md
+    - 'Understanding test scenarios': user_guide/test_scenarios.md
+    - 'Synthetic questions generator': user_guide/questions_generator.md
+    - 'RAG configuration': user_guide/rag_configuration.md
+
+
