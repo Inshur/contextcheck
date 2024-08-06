@@ -91,7 +91,6 @@ Following are specific names one should use together with `llm_metric`  assertio
 
 Metrics `model-grading-qa` and `human-vs-ai` require additional assertions defined in the text. Refer to details below. 
 
-## 
 
 ## Additional considerations
 
