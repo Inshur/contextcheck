@@ -16,7 +16,7 @@ ContextCheck implements following metrics:
 
 * **Is valid json** - Checks if the answer (in the string format) can be converted into a valid JSON
 
-* **Has valid json schema** - Checks is response is valid JSON and allows custom schema validations
+* **Has valid json schema** - Checks if the response is valid JSON and allows custom schema validations
 
 * **Equals** - Checks if the answer matches 1-to-1 the expected answer
 
@@ -178,6 +178,9 @@ steps:
               minimum: 5
           required: ["products", "totalResults"]
 ```
+
+If you're new to JSON Schema, the [Miscellaneous Examples](https://json-schema.org/learn/miscellaneous-examples) from the JSON Schema Community 
+are helpful for getting started and understanding its capabilities. For more in-depth information, we recommend the [JSON Schema Reference](https://json-schema.org/understanding-json-schema/reference).
 
 
 ## Equals

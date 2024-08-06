@@ -20,6 +20,49 @@ In essence, available ContextCheck LLM-based metrics can be conceptualized as:
 * **Human vs AI** - This metric compares the AI's response to a predefined ground truth response written by a human. Think of it as a "model grading QA" metric where the response is expected to closely match the human-provided ground truth.
 
 
+## Understanding the limits of LLM-based evaluation
+
+When working with LLM-based evaluation systems, it's important to understand that while these metrics provide valuable insights, 
+they should not be relied upon blindly. Much like how human evaluators can make mistakes or overlook details, these AI-powered metrics 
+have limitations and may not always perfectly assess the quality or accuracy of an LLM's output.
+
+Think of these metrics like a human grader with a vast amount of knowledge but also subject to human-like limitations. 
+A human judge might overlook a critical detail or make an error in judgment, especially in complex or ambiguous cases. 
+Similarly, an LLM-based evaluation system, while powerful and efficient, isn't infallible. 
+It can make errors, especially in edge cases or when dealing with nuanced or complex queries.
+
+## Working with LLM evaluation metrics
+
+When evaluating LLM or RAG systems using these metrics, it's essential to understand their strengths and limitations, 
+and apply them thoughtfully to ensure accurate and reliable results. We invite you to follow practices listed below:
+
+
+### Human vs AI
+
+Use this metric when you expect the AI's response to closely mirror a human-written answer in both length and semantic content. It's particularly useful when the desired answer is straightforward and the response should resemble a human's in style and substance. From our experiments, we’ve observed that even smaller models, like GPT-4o-mini, perform adequately with this metric, making it a reliable choice for many scenarios.
+
+### Model Grading QA
+
+If defining an exact answer is challenging or if the expected answer may vary in form, the "Model Grading QA" metric is a better option. This metric allows you to specify detailed expectations about what the answer should or should not include. To use it effectively, think about the type of information you expect in the response and write separate assertions for each key aspect. This approach provides flexibility in evaluation, ensuring that even if the answer isn't a perfect match in wording, it can still meet the intended criteria.
+
+### Hallucination Metric
+
+This metric detects when the AI includes information not present in the references. However, like humans, the AI might misjudge context, flagging valid inferences as hallucinations or missing subtle errors. Interpret results with care, understanding its potential limitations.
+
+### QA Reference
+
+The QA Reference metric checks if the AI’s response correctly answers the query based on the references. However, the AI, like a human, might miss nuances or misinterpret complex information, leading to inaccuracies. Be aware of this when evaluating the results.
+
+
+## Interpreting metric outputs
+
+After executing LLM-based tests scenarios, you will receive a label indicating the LLM’s evaluation of the output, along with supporting facts (where applicable) that explain the reasoning behind the decision. Here's how to interpret the results:
+
+* **Hallucination, QA Reference, Summary, and Human vs AI Metrics**: The output will include a label such as "factual"/"hallucinated," "correct"/"incorrect," or "good"/"bad." This label shows whether the output passes or fails the test. For example, in the Hallucination metric, if the label is "factual," the test passes; if it’s "hallucinated," the test fails. The accompanying facts provide insights into the LLM's reasoning, explaining how it arrived at its conclusion. This helps users understand the AI’s decision-making process and assess the accuracy of the output.
+
+* **Model Grading QA Metric**: This metric simply produces a label of either "correct" or "incorrect," without additional explanation. The label directly reflects whether the output met the specific criteria outlined in the rubric.
+
+
 ## Implementing metrics in the test scenarios
 
 The implementation is similar to the deterministic metrics. 
@@ -47,6 +90,8 @@ Following are specific names one should use together with `llm_metric`  assertio
 * `human-vs-ai`
 
 Metrics `model-grading-qa` and `human-vs-ai` require additional assertions defined in the text. Refer to details below. 
+
+## 
 
 ## Additional considerations
 
