@@ -1,6 +1,8 @@
 from pydantic import BaseModel, ConfigDict
 
 
+# NOTE RB: Imo, we should think how to refactor this as not every endpoint need those params
+# and some new endpoints/connectors might need other values
 class EndpointConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     kind: str = "openai"

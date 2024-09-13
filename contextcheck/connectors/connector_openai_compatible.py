@@ -13,13 +13,14 @@ def check_provider(provider: str) -> None:
 
 
 class ConnectorOpenAICompatible(ConnectorBase):
-    model: str | None = None
-    provider: str | None = None
+    model: str | None = None  # NOTE RB: None should not be allowed
+    provider: str | None = None  # NOTE RB: None should not be allowed
     temperature: float | None = None
     max_tokens: int | None = None
 
     def send(self, data: dict) -> dict:
 
+        # NOTE RB: This should be a field_validator
         if self.provider is not None:
             check_provider(self.provider)
 

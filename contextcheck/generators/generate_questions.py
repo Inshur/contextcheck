@@ -36,11 +36,11 @@ class QuestionsGenerator(BaseModel):
     questions_generator_endpoint_config: EndpointConfig
     llm_endpoint: EndpointBase | None = None
 
-    stop_words: set = set(stopwords.words(["english", "spanish"]))
+    stop_words: set = set(stopwords.words(["english", "spanish"]))  # NOTE RB: Why Spanish?
     generated_questions: list[str] = []
 
     def model_post_init(self, __context) -> None:
-        nltk.download("stopwords")
+        nltk.download("stopwords")  # NOTE RB: Why are we downloading stopwords after usage?
         self.llm_endpoint = endpoint_factory(self.questions_generator_endpoint_config)
 
     def preprocess_text(self, text: str, stop_words):
@@ -82,7 +82,9 @@ class QuestionsGenerator(BaseModel):
         """Split the response by newlines and extract the question from each JSON entity.
         Return a list of questions."""
         msg = response.message
-        questions = msg.split("\n")
+        questions = msg.split(
+            "\n"
+        )  # NOTE RB: I'd add split character(s) as parameter in this function
         parsed_questions = []
         for q in questions:
             try:
@@ -104,7 +106,9 @@ class QuestionsGenerator(BaseModel):
             for topic_num, topic in enumerate(document_topics):
                 print(f"Generating questions for document {document['name']} topic {topic_num}.")
                 # Get chunks from semantic db with space separated topic words
-                topic_chunks = self.api_wrapper.query_semantic_db(" ".join(topic))
+                topic_chunks = self.api_wrapper.query_semantic_db(
+                    " ".join(topic)
+                )  # NOTE RB: Maybe topic could already be a total string and not a list[str]?
 
                 prompt = self._prepare_request(topic_chunks)
                 response = self.llm_endpoint.send_request(prompt)

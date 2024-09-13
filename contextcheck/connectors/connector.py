@@ -22,4 +22,6 @@ class ConnectorBase(BaseModel):
         self.stats.conn_duration = self.stats.conn_end_time - self.stats.conn_start_time  # type: ignore
 
     def send(self, args, **kwargs):
+        # NOTE RB: Return typing
+        # NOTE RB: *args, and not args
         raise NotImplementedError

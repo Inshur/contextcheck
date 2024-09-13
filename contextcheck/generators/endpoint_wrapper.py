@@ -4,6 +4,9 @@ from typing import List
 from pydantic import BaseModel
 
 
+# NOTE RB: pass is unnecessary
+# NOTE RB: Old typing style mixed with new one
+# NOTE RB: Question vs Query, unify it to one or the other
 class RagApiWrapperBase(BaseModel, ABC):
 
     @abstractmethod

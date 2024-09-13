@@ -56,6 +56,10 @@ class TestScenario(BaseModel):
 
         # Get config here to set default request
         config = TestConfig.model_validate(cls_dict.get("config", {}) or {})
+
+        # NOTE RB: Will this work for async scenarios where multiple test scenarios are run
+        # at the same time? As different scenarios might define different default_request which
+        # might cause a race condition I believe
         if config.default_request:
             TestStep.default_request = config.default_request
         cls_dict["filename"] = file_path.name

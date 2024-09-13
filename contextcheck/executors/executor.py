@@ -39,14 +39,16 @@ class Executor:
         logger.info("Running scenario", self.test_scenario)
         result = True
         for test_step in self.run_steps():
-            result &= bool(test_step.result)
+            result &= bool(
+                test_step.result
+            )  # NOTE RB: Why we cast to bool? Shouldn't it be bool 100% of the time?
             if self.early_stop:
                 break
         self.test_scenario.result = result
         return result
 
     def run_steps(self) -> list[TestStep]:
-        """Run and yield steps iteratively."""
+        """Run and yield steps iteratively."""  # NOTE RB: How do we "yield" it iteratively?
         step_results = []
         for test_step in self.test_scenario.steps:
             if self.early_stop:
@@ -60,6 +62,7 @@ class Executor:
 
         self.ui(test_step)
 
+        # NOTE RB: Dangerous code that runs eval here
         request = test_step.request.build(self.context)
 
         self.ui(request)

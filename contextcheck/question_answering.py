@@ -1,11 +1,14 @@
-from argparse import ArgumentParser
 import sys
+from argparse import ArgumentParser
 from pathlib import Path
 
 from contextcheck.generators.generate_answers import AnswerGenerator
 from contextcheck.questions_generator import import_class_from_string
 
 
+# NOTE RB: It won't work with new changes to ContextClue
+# NOTE RB: Will this functionality get into the final release, if yes, then it kinda needs
+# to be refactored as it is ContextClue specific I believe
 def generate_answers(
     output_file: str,
     wrapper_class_path: str,
@@ -29,13 +32,14 @@ def generate_answers(
     """
     api_wrapper = import_class_from_string(wrapper_class_path)
 
-    generator_args = {"api_wrapper": api_wrapper(),
-                      "top_k": top_k,
-                      "questions_file": questions_file,
-                      "use_ranker": use_ranker,
-                      "collection_name": collection_name,
-                      "debug": debug,
-                      }
+    generator_args = {
+        "api_wrapper": api_wrapper(),
+        "top_k": top_k,
+        "questions_file": questions_file,
+        "use_ranker": use_ranker,
+        "collection_name": collection_name,
+        "debug": debug,
+    }
 
     generator = AnswerGenerator(**generator_args)
     generator.save_to_yaml(output_file)
@@ -56,15 +60,15 @@ def main():
         type=str,
         required=True,
         help="Output path and filename to save the generated questions. "
-             "Example: 'my_folder/my_file.yaml'. If folder does not exist, it will be created.",
+        "Example: 'my_folder/my_file.yaml'. If folder does not exist, it will be created.",
     )
     parser.add_argument(
         "--wrapper-class-path",
         type=str,
         required=True,
         help="Full path to the API wrapper class definition. "
-             "Example: For a class 'ClassName' defined in file 'module/submodule.py' use format"
-             " 'module.submodule.ClassName'.",
+        "Example: For a class 'ClassName' defined in file 'module/submodule.py' use format"
+        " 'module.submodule.ClassName'.",
     )
     parser.add_argument(
         "--top-k",
@@ -90,7 +94,6 @@ def main():
         type=bool,
         action="store_true",
         help="It will append semantic search chunks along with the questions",
-
     )
 
     args = parser.parse_args(args=None if sys.argv[1:] else ["--help"])
@@ -103,7 +106,6 @@ def main():
         use_ranker=args.use_ranker,
         collection_name=args.colelction_name,
         debug=args.debug,
-
     )
 
 

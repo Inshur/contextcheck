@@ -8,12 +8,13 @@ from contextcheck.generators.endpoint_wrapper import RagApiWrapperBase
 from contextcheck.loaders.yaml import load_yaml_file
 
 
+# NOTE RB: It probably won't work with new changes to ContextClue (new checkbox in MR template? :P)
 class AnswerGenerator(BaseModel):
     top_k: int = 3
     collection_name: str = "default"
     questions_file: Path
     api_wrapper: RagApiWrapperBase
-    questions: dict = {}
+    questions: dict = {}  # NOTE RB: questions should be a pydantic model, not a dict
     alpha: float = 0.75
     use_ranker: bool = True
     debug: bool = False
@@ -36,24 +37,35 @@ class AnswerGenerator(BaseModel):
             entry = {"document": current_document, "qa": []}
             list_of_questions = document_questions["questions"]
             data = {}
-            print('Generating answers for document:', current_document)
+            print("Generating answers for document:", current_document)
             for idx, question in enumerate(list_of_questions):
-                answers = self.api_wrapper.query_qa(question,
-                                                    **{"use_ranker": self.use_ranker,
-                                                       "top_k": self.top_k,
-                                                       "alpha": self.alpha,
-                                                       })
+                answers = self.api_wrapper.query_qa(
+                    question,
+                    **{
+                        "use_ranker": self.use_ranker,
+                        "top_k": self.top_k,
+                        "alpha": self.alpha,
+                    },  # NOTE RB: Why not use_ranker=self.use_ranker etc.?
+                )
                 data["item_" + str(idx)] = {
                     "question": question,
-                    "answer": answers['result'],
+                    "answer": answers["result"],
                 }
 
                 if self.debug:
-                    data['item_' + str(idx)] = {"answers": [[{'chunk': answer['chunk'],
-                                                              'document': answer['metadata'][
-                                                                  'document_name'],
-                                                              }] for answer in
-                                                            answers[:self.top_k]]}
+                    data["item_" + str(idx)] = {
+                        "answers": [
+                            [
+                                {
+                                    "chunk": answer["chunk"],
+                                    "document": answer["metadata"]["document_name"],
+                                }
+                            ]
+                            for answer in answers[
+                                : self.top_k
+                            ]  # NOTE RB: Why self.top_k is used here?
+                        ]
+                    }
 
                 print(f"Processing {idx + 1}/{len(list_of_questions)} questions")
                 entry["qa"].append(data["item_" + str(idx)])

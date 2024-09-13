@@ -1,16 +1,20 @@
 import re
+
 from pydantic import BaseModel, ConfigDict, model_validator
 
 from contextcheck.assertions.llm_metrics import LLMMetricEvaluator, llm_metric_factory
+from contextcheck.assertions.utils import JsonValidator
 from contextcheck.endpoints.endpoint import EndpointBase
 from contextcheck.models.request import RequestBase
 from contextcheck.models.response import ResponseBase
-from contextcheck.assertions.utils import JsonValidator
+
+# NOTE RB: I'd change pydantic fields to use Field and give them meaningful descriptions
+# NOTE RB: Why does `eval_endpoint=EndpointBase` everywhere, I suppose it should be typing?
 
 
 class AssertionBase(BaseModel):
     model_config = ConfigDict(extra="allow")
-    result: bool | None = None
+    result: bool | None = None  # NOTE RB: I'd change result to be a computed_field
 
     @model_validator(mode="before")
     @classmethod
@@ -32,6 +36,7 @@ class AssertionEval(AssertionBase):
     ) -> bool:
         if self.result is None:
             try:
+                # NOTE RB: I suppose running eval has some major security risks attached
                 result = eval(self.eval)
             except NameError:
                 raise NameError(f"Given eval `{self.eval}` uses non-existent name.")
@@ -42,7 +47,7 @@ class AssertionEval(AssertionBase):
 
 
 class AssertionLLM(AssertionBase):
-    llm_metric: str
+    llm_metric: str  # NOTE RB: Change it to enum with possible metrics
     reference: str = ""
     assertion: str = ""
 
@@ -65,6 +70,7 @@ class AssertionLLM(AssertionBase):
         return self.result
 
 
+# NOTE RB: Maybe change it to upper case to represent constant dict
 deterministic_metrics = {
     "contains": lambda assertion, response: assertion in response,
     "icontains": lambda assertion, response: assertion.lower() in response.lower(),

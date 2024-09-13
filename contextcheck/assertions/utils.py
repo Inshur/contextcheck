@@ -1,7 +1,9 @@
-import jsonschema
 import json
+
+import jsonschema
 import jsonschema.exceptions
 from pydantic import BaseModel
+
 
 class JsonValidator(BaseModel):
     request_json: str
@@ -13,15 +15,16 @@ class JsonValidator(BaseModel):
             return True
         except json.JSONDecodeError:
             return False
-        
+
     def has_valid_schema(self):
         self.is_valid()
 
         if self.assertion_schema is None:
             raise ValueError("Assertion schema is not provided.")
-        
+
         try:
             jsonschema.validate(json.loads(self.request_json), schema=self.assertion_schema)
             return True
         except (jsonschema.exceptions.ValidationError, jsonschema.exceptions.SchemaError) as e:
+            # NOTE RB: Maybe logging an error could be helpful?
             return False

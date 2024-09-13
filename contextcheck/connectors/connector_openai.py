@@ -9,8 +9,10 @@ dotenv.load_dotenv()
 
 
 class ConnectorOpenAI(ConnectorBase):
-    api_key: str = os.environ["OPENAI_API_KEY"]
-    model: str | None = None
+    api_key: str = os.environ[
+        "OPENAI_API_KEY"
+    ]  # NOTE RB: Seems unnecessary as OpenAI can read the key from env variables
+    model: str | None = None  # NOTE RB: None should not be allowed imo
 
     @property
     def _client(self) -> OpenAI:

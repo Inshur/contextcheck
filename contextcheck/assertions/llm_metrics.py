@@ -17,9 +17,8 @@ class LLMMetric(BaseModel):
     rails: dict = {}
 
     def parse_prompt(self, input: str, output: str, **args) -> str:
-        return self.prompt_template.format(
-            input=input, output=output, reference=args["reference"]
-        )
+        # NOTE RB: `k` before `a` in args
+        return self.prompt_template.format(input=input, output=output, reference=args["reference"])
 
     def check_response_rails(self, response: ResponseBase) -> bool:
         if response.message.lower() not in self.rails:  # type: ignore
@@ -45,6 +44,7 @@ class MetricModelGradingQA(LLMMetric):
     rails: dict = {"correct": True, "incorrect": False}
 
     def parse_prompt(self, input: str, output: str, **args) -> str:
+        # NOTE RB: `k` before `a` in args
         return self.prompt_template.format(output=output, assertion=args["assertion"])
 
 
@@ -53,6 +53,7 @@ class MetricSummarization(LLMMetric):
     rails: dict = {"good": True, "bad": False}
 
     def parse_prompt(self, input: str, output: str, **args) -> str:
+        # NOTE RB: `k` before `a` in args
         return self.prompt_template.format(input=input, output=output)
 
 
@@ -61,6 +62,7 @@ class MetricHumanVsAI(LLMMetric):
     rails: dict = {"correct": True, "incorrect": False}
 
 
+# NOTE RB: Maybe change it to upper case to represent constant dict
 llm_metric_type_map = {
     "hallucination": MetricHallucination,
     "qa-reference": MetricQAReference,
@@ -70,6 +72,7 @@ llm_metric_type_map = {
 }
 
 
+# NOTE RB: Maybe a `metric_type` could be an enum with possible values?
 def llm_metric_factory(metric_type: str) -> LLMMetric:
     try:
         metric_class = llm_metric_type_map[metric_type]
@@ -87,6 +90,7 @@ class LLMMetricEvaluator(BaseModel):
         message: str = ""
 
     def evaluate(self, input: str, output: str, **args) -> bool:
+        # NOTE RB: I'd add `k` before `a` in args
         message = self.metric.parse_prompt(input=input, output=output, **args)
         response = self.eval_endpoint.send_request(self.EvalRequest(message=message))
         return self.metric.check_response_rails(response)
