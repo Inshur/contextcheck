@@ -20,7 +20,11 @@ class InterfaceBase(BaseModel):
 
     # NOTE RB: # Cannot add proper typing as circular dependencies would arose
     def _create_a_summary_report(self, executor: "Executor") -> dict:
-        """Create a summary of the results obtained from a test scenario"""
+        """
+        Create a summary of the results obtained from a test scenario
+
+        Warning: The results must be a nested dict of type dict[str, dict[str, dict[str, float]]]
+        """
 
         # This function is taken straight from assertion factory
         def get_assertion_kind(assertion: dict):

@@ -83,13 +83,13 @@ class InterfaceTUI(InterfaceBase):
         # then we'd need to either update this table, or create a separate table for continous results
         # Although we could also add some new overlapping metrics like max, min, median etc.
         table = Table(show_lines=True)
-        table.add_column("Class")  # LLM Metric, eval etc.
-        table.add_column("Name")  # Name of the metric e.g. LLM-Metric / qa-reference
-        table.add_column("Mean")
-        table.add_column("Count")
+        table.add_column("Metric type")  # LLM Metric, eval etc.
+        table.add_column("Metric name")  # Name of the metric e.g. LLM-Metric / qa-reference
+        table.add_column("Mean score")
+        table.add_column("Test count")
 
-        for key, value in scenario_results:
-            for key2, value2 in value:
+        for key, value in scenario_results.items():
+            for key2, value2 in value.items():
                 table.add_row(
                     Pretty(key),
                     Pretty(key2),
