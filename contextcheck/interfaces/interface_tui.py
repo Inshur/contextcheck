@@ -72,3 +72,29 @@ class InterfaceTUI(InterfaceBase):
             )
 
         print(table)
+
+        if kwargs.get("aggregate_results", False):
+            self.report_results(executor=executor)
+
+    def report_results(self, executor: Executor) -> None:
+        scenario_results = self._create_a_summary_report(executor=executor)
+
+        # NOTE: Now we have only binary statistics, but if we were to add "continous assertions"
+        # then we'd need to either update this table, or create a separate table for continous results
+        # Although we could also add some new overlapping metrics like max, min, median etc.
+        table = Table(show_lines=True)
+        table.add_column("Class")  # LLM Metric, eval etc.
+        table.add_column("Name")  # Name of the metric e.g. LLM-Metric / qa-reference
+        table.add_column("Mean")
+        table.add_column("Count")
+
+        for key, value in scenario_results:
+            for key2, value2 in value:
+                table.add_row(
+                    Pretty(key),
+                    Pretty(key2),
+                    Pretty(value2["mean"]),
+                    Pretty(value2["count"]),
+                )
+
+        print(table)
