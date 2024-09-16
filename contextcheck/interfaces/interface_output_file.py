@@ -31,6 +31,10 @@ class InterfaceOutputFile(InterfaceBase):
             report = self._create_a_summary_report(executor=executor)
             res["report"] = report
 
+        if kwargs.get("show_time_statistics", False):
+            time_statistics = self._create_time_statistics(executor=executor)
+            res["time_statistics"] = time_statistics
+
         res = json.dumps(res, indent=4)
         FileHandler(output_path).write_file(res)
 
@@ -48,6 +52,24 @@ class InterfaceOutputFile(InterfaceBase):
 
         scenario_results = self._create_a_summary_report(executor=executor)
         res["report"] = scenario_results
+
+        res = json.dumps(res, indent=4)
+        FileHandler(output_path).write_file(res)
+
+    def report_time(
+        self, executor: Executor, output_folder: str, global_test_timestamp: str
+    ) -> None:
+        filename = os.path.basename(self.test_scenario_filename)  # type: ignore
+        filename = filename.split(".")[0] + "_time_statistics"
+        date_now = datetime.now(timezone.utc)
+        output_path = f"{output_folder}/{filename}_{date_now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+
+        res = {}
+        res["global_test_timestamp"] = global_test_timestamp
+        res["test_timestamp"] = str(datetime.timestamp(date_now))
+
+        scenario_results = self._create_a_summary_report(executor=executor)
+        res["time_statistics"] = scenario_results
 
         res = json.dumps(res, indent=4)
         FileHandler(output_path).write_file(res)

@@ -91,7 +91,10 @@ class Executor:
     def summary(self, **kwargs: dict[str, str]):
         self.ui.summary(self, **kwargs)
 
-    def report_results(self, **kwargs: dict[str, str]):
+    def report_results(self, **kwargs):
         # This function isn't utilized on it's own right now, but is rather used by summary
         # at least for tui interface, though I leave it as a separate accessible function
         self.ui.report_results(self, **kwargs)
+
+    def report_time(self, **kwargs):
+        self.ui.report_time(self, **kwargs)

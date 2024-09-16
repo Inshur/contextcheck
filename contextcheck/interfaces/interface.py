@@ -2,6 +2,7 @@ import copy
 from collections import defaultdict
 from typing import Any
 
+import numpy as np
 from loguru import logger
 from pydantic import BaseModel
 
@@ -19,7 +20,9 @@ class InterfaceBase(BaseModel):
         logger.info(obj)
 
     # NOTE RB: # Cannot add proper typing as circular dependencies would arose
-    def _create_a_summary_report(self, executor: "Executor") -> dict:
+    def _create_a_summary_report(
+        self, executor: "Executor"
+    ) -> dict[str, dict[str, dict[str, float]]]:
         """
         Create a summary of the results obtained from a test scenario
 
@@ -72,5 +75,28 @@ class InterfaceBase(BaseModel):
         aggregate_data(data=assertion_results_aggregated)
         return assertion_results_aggregated
 
-    def report_results(self, obj: Any) -> Any:
+    def _create_time_statistics(self, executor: "Executor") -> dict[str, float]:
+        request_times = []
+        for step in executor.test_scenario.steps:
+            request_times.append(step.response.stats.conn_duration)
+
+        mean = np.mean(request_times)
+        median = np.median(request_times)
+        minimum = np.min(request_times)
+        maximum = np.max(request_times)
+        std = np.std(request_times)
+
+        time_statistics = {
+            "mean": mean,
+            "median": median,
+            "minimum": minimum,
+            "maximum": maximum,
+            "std": std,
+        }
+        return time_statistics
+
+    def report_results(self, executor: "Executor", **kwargs) -> None:
+        raise NotImplementedError("Functionality is not implemented")
+
+    def report_time(self, executor: "Executor", **kwargs) -> None:
         raise NotImplementedError("Functionality is not implemented")

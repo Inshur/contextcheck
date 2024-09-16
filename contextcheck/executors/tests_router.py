@@ -20,6 +20,7 @@ class TestsRouter(BaseModel):
     exit_on_failure: bool = False
     global_test_timestamp: str | None = None
     aggregate_results: bool = False
+    show_time_statistics: bool = False
 
     @field_validator("filename")
     @classmethod
@@ -62,6 +63,7 @@ class TestsRouter(BaseModel):
             output_folder=self.output_folder,
             global_test_timestamp=self.global_test_timestamp,
             aggregate_results=self.aggregate_results,
+            show_time_statistics=self.show_time_statistics,
         )
 
         return scenario_result, executor.early_stop
