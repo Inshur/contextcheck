@@ -1,0 +1,22 @@
+config:
+  endpoint_under_test:
+    kind: openai
+    model: gpt-4o-mini
+    temperature: 0.2
+  eval_endpoint:
+    kind: openai
+    model: gpt-4o
+    temperature: 0.0
+
+steps:
+   - name: Check capital of Poland
+     request: 'What is the capital city of Poland?'
+     asserts:
+        - '"Warsaw" in response.message'
+        - 'response.stats.conn_duration < 3'
+   - name: Test hallucination evaluator (hallucinated)
+     request:
+       message: Where did Mike go? Choose between the home and the park.
+     asserts:
+        - llm_metric: hallucination
+          reference: Mike went to the store.
