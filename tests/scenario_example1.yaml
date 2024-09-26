@@ -9,14 +9,25 @@ config:
     temperature: 0.0
 
 steps:
-   - name: Check capital of Poland
-     request: 'What is the capital city of Poland?'
-     asserts:
-        - '"Warsaw" in response.message'
-        - 'response.stats.conn_duration < 3'
-   - name: Test hallucination evaluator (hallucinated)
-     request:
-       message: Where did Mike go? Choose between the home and the park.
-     asserts:
-        - llm_metric: hallucination
-          reference: Mike went to the store.
+  - name: Write sucess
+    request: 'Please write only "success" as a response'
+    asserts:
+      - '"success" == response.message'
+      - 'response.stats.conn_duration < 10'
+  - name: Capital of Poland
+    request: 'What is the capital of Poland?'
+    asserts:
+      - '"Warsaw" in response.message'
+  - name: Test model grading QA evaluator
+    request:
+      message: "Please write a 5 line poem about AI."
+    asserts:
+      - llm_metric: model-grading-qa
+        assertion: Text should be a poem about AI.
+      - llm_metric: model-grading-qa
+        assertion: Text should be a report on taxes. # Misleading assertion for demo purposes
+  - name: Deterministic assertion test
+    request: 'What is the capital of France?'
+    asserts:
+      - kind: contains
+        assertion: 'Paris'
