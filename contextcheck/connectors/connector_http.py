@@ -1,5 +1,3 @@
-from typing import Dict, Optional
-
 import requests
 
 from contextcheck.connectors.connector import ConnectorBase
@@ -19,13 +17,12 @@ class ConnectorHTTP(ConnectorBase):
         # NOTE RB: In some connectors params like tempereture, max_tokens etc. are parametrized in the
         # model (ConnectorOpenAICompatible), sometimes they are not given at all (ConnectorOpenAI) and
         # sometimes they could be given implicitly (ConnectorHTTP)
-        # NOTE RB: Use timeout from parameters if provided
         response = requests.post(
             url=self.url,
             json=data if json else None,
             data=data if not json else None,
             params=params,
-            timeout=self.timeout,
+            timeout=timeout or self.timeout,
             headers=self.additional_headers,
         )
         response.raise_for_status()

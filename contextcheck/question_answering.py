@@ -6,9 +6,6 @@ from contextcheck.generators.generate_answers import AnswerGenerator
 from contextcheck.questions_generator import import_class_from_string
 
 
-# NOTE RB: It won't work with new changes to ContextClue
-# NOTE RB: Will this functionality get into the final release, if yes, then it kinda needs
-# to be refactored as it is ContextClue specific I believe
 def generate_answers(
     output_file: str,
     wrapper_class_path: str,

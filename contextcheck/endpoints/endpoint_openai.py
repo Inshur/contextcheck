@@ -25,9 +25,11 @@ class EndpointOpenAI(EndpointBase):
 
     class ResponseModel(ResponseBase):
         @model_validator(mode="before")
+        @classmethod
         def from_dict(cls, data: dict) -> dict:
             # NOTE RB: I'd create a new dict to remove the output from a particular model
             # or at least give it under a special name like _model_output
+            # NOTE RB: Or explicitly state which values are allowed by the model
             data["message"] = data["choices"][0]["message"]["content"]
             data["stats"] = ResponseStats(
                 tokens_request=data["usage"]["prompt_tokens"],

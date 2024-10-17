@@ -2,6 +2,7 @@ import json
 
 import jsonschema
 import jsonschema.exceptions
+from loguru import logger
 from pydantic import BaseModel
 
 
@@ -26,5 +27,5 @@ class JsonValidator(BaseModel):
             jsonschema.validate(json.loads(self.request_json), schema=self.assertion_schema)
             return True
         except (jsonschema.exceptions.ValidationError, jsonschema.exceptions.SchemaError) as e:
-            # NOTE RB: Maybe logging an error could be helpful?
+            logger.error(f"Error message: {e}")
             return False

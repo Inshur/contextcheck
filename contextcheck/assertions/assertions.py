@@ -1,20 +1,22 @@
 import re
+from enum import StrEnum
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from contextcheck.assertions.llm_metrics import LLMMetricEvaluator, llm_metric_factory
+from contextcheck.assertions.llm_metrics import (
+    LlmMetricEnum,
+    LLMMetricEvaluator,
+    llm_metric_factory,
+)
 from contextcheck.assertions.utils import JsonValidator
 from contextcheck.endpoints.endpoint import EndpointBase
 from contextcheck.models.request import RequestBase
 from contextcheck.models.response import ResponseBase
 
-# NOTE RB: I'd change pydantic fields to use Field and give them meaningful descriptions
-# NOTE RB: Why does `eval_endpoint=EndpointBase` everywhere, I suppose it should be typing?
-
 
 class AssertionBase(BaseModel):
     model_config = ConfigDict(extra="allow")
-    result: bool | None = None  # NOTE RB: I'd change result to be a computed_field
+    result: bool | None = Field(default=None, description="Result of a assertion")
 
     @model_validator(mode="before")
     @classmethod
@@ -23,20 +25,20 @@ class AssertionBase(BaseModel):
         return obj if isinstance(obj, dict) else {"eval": obj}
 
     def __call__(
-        self, request: RequestBase, response: ResponseBase, eval_endpoint=EndpointBase
+        self, request: RequestBase, response: ResponseBase, eval_endpoint: EndpointBase
     ) -> bool:
         raise NotImplementedError
 
 
 class AssertionEval(AssertionBase):
-    eval: str
+    eval: str = Field(description="Eval string to be used for python's eval")
 
     def __call__(
-        self, request: RequestBase, response: ResponseBase, eval_endpoint=EndpointBase
+        self, request: RequestBase, response: ResponseBase, eval_endpoint: EndpointBase
     ) -> bool:
         if self.result is None:
             try:
-                # NOTE RB: I suppose running eval has some major security risks attached
+                # NOTE: I suppose running eval has some major security risks attached
                 result = eval(self.eval)
             except NameError:
                 raise NameError(f"Given eval `{self.eval}` uses non-existent name.")
@@ -47,12 +49,14 @@ class AssertionEval(AssertionBase):
 
 
 class AssertionLLM(AssertionBase):
-    llm_metric: str  # NOTE RB: Change it to enum with possible metrics
-    reference: str = ""
-    assertion: str = ""
+    llm_metric: LlmMetricEnum
+    reference: str = Field(default="", description="Reference given to llm")
+    assertion: str = Field(
+        default="", description="Assertion given to llm to compare against the obtained results"
+    )
 
     def __call__(
-        self, request: RequestBase, response: ResponseBase, eval_endpoint=EndpointBase
+        self, request: RequestBase, response: ResponseBase, eval_endpoint: EndpointBase
     ) -> bool:
         if self.result is None:
             metric = llm_metric_factory(metric_type=self.llm_metric)
@@ -70,42 +74,61 @@ class AssertionLLM(AssertionBase):
         return self.result
 
 
-# NOTE RB: Maybe change it to upper case to represent constant dict
-deterministic_metrics = {
-    "contains": lambda assertion, response: assertion in response,
-    "icontains": lambda assertion, response: assertion.lower() in response.lower(),
-    "contains-all": lambda assertion, response: all(
+class DeterministicMetricsEnum(StrEnum):
+    CONTAINS = "contains"
+    ICONTAINS = "icontains"
+    CONTAINS_ALL = "contains-all"
+    ICONTAINS_ALL = "icontains-all"
+    CONTAINS_ANY = "contains-any"
+    ICONTAINS_ANY = "icontains-any"
+    IS_VALID_JSON = "is-valid-json"
+    HAS_VALID_JSON_SCHEMA = "has-valid-json-schema"
+    EQUALS = "equals"
+    REGEX = "regex"
+
+
+DETERMINISTIC_METRICS_MAPPING = {
+    DeterministicMetricsEnum.CONTAINS: lambda assertion, response: assertion in response,
+    DeterministicMetricsEnum.ICONTAINS: lambda assertion, response: assertion.lower()
+    in response.lower(),
+    DeterministicMetricsEnum.CONTAINS_ALL: lambda assertion, response: all(
         [assertion in response for assertion in assertion]
     ),
-    "icontains-all": lambda assertion, response: all(
+    DeterministicMetricsEnum.ICONTAINS_ALL: lambda assertion, response: all(
         [assertion.lower() in response.lower() for assertion in assertion]
     ),
-    "contains-any": lambda assertion, response: any(
+    DeterministicMetricsEnum.CONTAINS_ANY: lambda assertion, response: any(
         [assertion in response for assertion in assertion]
     ),
-    "icontains-any": lambda assertion, response: any(
+    DeterministicMetricsEnum.ICONTAINS_ANY: lambda assertion, response: any(
         [assertion.lower() in response.lower() for assertion in assertion]
     ),
-    "is-valid-json": lambda assertion, response: JsonValidator(request_json=response).is_valid(),
-    "has-valid-json-schema": lambda assertion, response: JsonValidator(
+    DeterministicMetricsEnum.IS_VALID_JSON: lambda assertion, response: JsonValidator(
+        request_json=response
+    ).is_valid(),
+    DeterministicMetricsEnum.HAS_VALID_JSON_SCHEMA: lambda assertion, response: JsonValidator(
         request_json=response, assertion_schema=assertion
     ).has_valid_schema(),
-    "equals": lambda assertion, response: assertion == response,
-    "regex": lambda assertion, response: bool(re.match(assertion, response)),
+    DeterministicMetricsEnum.EQUALS: lambda assertion, response: assertion == response,
+    DeterministicMetricsEnum.REGEX: lambda assertion, response: bool(re.match(assertion, response)),
 }
 
 
 class AssertionDeterministic(AssertionBase):
-    kind: str
-    assertion: str | list[str] | dict | None = None
+    kind: DeterministicMetricsEnum = Field(description="A type of deterministic evaluation")
+    assertion: str | list[str] | dict | None = Field(
+        default=None, description="Assertion to be evaluated"
+    )
 
     def __call__(
         self, request: RequestBase, response: ResponseBase, eval_endpoint=EndpointBase
     ) -> bool:
         if self.result is None:
 
-            if self.kind in deterministic_metrics:
-                self.result = deterministic_metrics[self.kind](self.assertion, response.message)
+            if self.kind in DETERMINISTIC_METRICS_MAPPING:
+                self.result = DETERMINISTIC_METRICS_MAPPING[self.kind](
+                    self.assertion, response.message
+                )
             else:
                 raise ValueError(f"Given kind `{self.kind}` is not a deterministic metric.")
 

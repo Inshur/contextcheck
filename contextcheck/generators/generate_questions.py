@@ -36,11 +36,12 @@ class QuestionsGenerator(BaseModel):
     questions_generator_endpoint_config: EndpointConfig
     llm_endpoint: EndpointBase | None = None
 
-    stop_words: set = set(stopwords.words(["english", "spanish"]))  # NOTE RB: Why Spanish?
+    stop_words: set = set()
     generated_questions: list[str] = []
 
     def model_post_init(self, __context) -> None:
-        nltk.download("stopwords")  # NOTE RB: Why are we downloading stopwords after usage?
+        nltk.download("stopwords")
+        self.stop_words = set(stopwords.words(["english", "spanish"]))
         self.llm_endpoint = endpoint_factory(self.questions_generator_endpoint_config)
 
     def preprocess_text(self, text: str, stop_words):
@@ -50,7 +51,7 @@ class QuestionsGenerator(BaseModel):
                 result.append(token)
         return result
 
-    def get_topic_lists_from_chunks(self, documents: list[str]):
+    def get_topic_lists_from_chunks(self, documents: list[str]) -> list[list[str]]:
         processed_documents = [self.preprocess_text(doc, self.stop_words) for doc in documents]
 
         dictionary = corpora.Dictionary(processed_documents)
@@ -78,13 +79,11 @@ class QuestionsGenerator(BaseModel):
         message = f"{chunks_joined}.\n\n------\n{prompt}"
         return RequestBase(message=message)
 
-    def _parse_response(self, response: ResponseBase) -> list[str]:
+    def _parse_response(self, response: ResponseBase, split_characters: str = "\n") -> list[str]:
         """Split the response by newlines and extract the question from each JSON entity.
         Return a list of questions."""
         msg = response.message
-        questions = msg.split(
-            "\n"
-        )  # NOTE RB: I'd add split character(s) as parameter in this function
+        questions = msg.split(split_characters)
         parsed_questions = []
         for q in questions:
             try:
@@ -106,9 +105,7 @@ class QuestionsGenerator(BaseModel):
             for topic_num, topic in enumerate(document_topics):
                 print(f"Generating questions for document {document['name']} topic {topic_num}.")
                 # Get chunks from semantic db with space separated topic words
-                topic_chunks = self.api_wrapper.query_semantic_db(
-                    " ".join(topic)
-                )  # NOTE RB: Maybe topic could already be a total string and not a list[str]?
+                topic_chunks = self.api_wrapper.query_semantic_db(" ".join(topic))
 
                 prompt = self._prepare_request(topic_chunks)
                 response = self.llm_endpoint.send_request(prompt)

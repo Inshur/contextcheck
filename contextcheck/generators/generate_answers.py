@@ -40,12 +40,7 @@ class AnswerGenerator(BaseModel):
             print("Generating answers for document:", current_document)
             for idx, question in enumerate(list_of_questions):
                 answers = self.api_wrapper.query_qa(
-                    question,
-                    **{
-                        "use_ranker": self.use_ranker,
-                        "top_k": self.top_k,
-                        "alpha": self.alpha,
-                    },  # NOTE RB: Why not use_ranker=self.use_ranker etc.?
+                    question, use_ranker=self.use_ranker, top_k=self.top_k, alpha=self.alpha
                 )
                 data["item_" + str(idx)] = {
                     "question": question,

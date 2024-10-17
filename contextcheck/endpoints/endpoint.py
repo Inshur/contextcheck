@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field
 
 from contextcheck.connectors.connector import ConnectorBase
 from contextcheck.endpoints.endpoint_config import EndpointConfig
@@ -8,8 +8,13 @@ from contextcheck.models.response import ResponseBase
 
 class EndpointBase(BaseModel):
     model_config = ConfigDict(extra="allow")
-    connector: ConnectorBase = ConnectorBase()
-    config: EndpointConfig = EndpointConfig()
+    connector: ConnectorBase = Field(
+        default_factory=ConnectorBase,
+        description="A connector responsible for connection to llm/rag",
+    )
+    config: EndpointConfig = Field(
+        default_factory=EndpointConfig, description="Configuration for llm/rag"
+    )
 
     class RequestModel(RequestBase):
         pass
