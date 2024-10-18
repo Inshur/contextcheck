@@ -1,12 +1,21 @@
-from pydantic import model_serializer, model_validator
+from pydantic import model_serializer, model_validator, Field
 
 from contextcheck.connectors.connector_openai_compatible import ConnectorOpenAICompatible
-from contextcheck.endpoints.endpoint import EndpointBase
+from contextcheck.endpoints.endpoint import EndpointBase, EndpointConfig
 from contextcheck.models.request import RequestBase
 from contextcheck.models.response import ResponseBase, ResponseStats
 
 
+class EndpointOpenAICompatibleConfig(EndpointConfig):
+    provider: str | None = "ChatOpenAI"
+
+
 class EndpointOpenAICompatible(EndpointBase):
+    config: EndpointOpenAICompatibleConfig = Field(
+        default_factory=EndpointOpenAICompatibleConfig,
+        description="Configuration for endpoints compatible with OpenAI through langchain"
+        ". Please see `ConnectorOpenAICompatible` for more info",
+    )
     connector: ConnectorOpenAICompatible = ConnectorOpenAICompatible()
 
     def model_post_init(self, __context) -> None:

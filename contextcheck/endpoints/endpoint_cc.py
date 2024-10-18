@@ -1,14 +1,27 @@
-from pydantic import model_serializer
+from pydantic import model_serializer, Field
 
 from contextcheck.connectors.connector_http import ConnectorHTTP
-from contextcheck.endpoints.endpoint import EndpointBase
+from contextcheck.endpoints.endpoint import EndpointBase, EndpointConfig
 from contextcheck.models.request import RequestBase
 
 # NOTE RB: No custom ResponseModel and I suppose it might be needed, e.g. to assign message to model
 # LATER
 
 
+# TODO: Add Fields with defaults and descriptions
+class EndpointCCConfig(EndpointConfig):
+    top_k: int = 3
+    use_ranker: bool = True
+    collection_name: str = "default"
+    url: str = ""  # AnyUrl type can be applied
+    additional_headers: dict = {}
+
+
 class EndpointCC(EndpointBase):
+    config: EndpointCCConfig = Field(
+        default_factory=EndpointCCConfig, description="Configuration for CC ednpoint"
+    )
+
     class RequestModel(RequestBase):
         @model_serializer
         def serialize(self) -> dict:
