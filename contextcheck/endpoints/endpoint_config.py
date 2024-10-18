@@ -10,7 +10,7 @@ class EndpointConfig(BaseModel):
     model: str | None = "gpt-4o-mini"
     additional_headers: dict = {}
 
-    provider: str | None = None
+    provider: str | None = "ChatOpenAI"
     temperature: float | None = None
     max_tokens: int | None = None
 
