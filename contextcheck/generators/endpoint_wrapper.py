@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 from pydantic import BaseModel, Field
 
 
+# NOTE RB: For list[dict] return types I'd create a pydantic model, as otherwise it is confusing
+# Or at least a TypedDict
 class RagApiWrapperBase(BaseModel, ABC):
     timeout: int = Field(default=60, description="A timeout set for a request")
 
@@ -22,15 +24,15 @@ class RagApiWrapperBase(BaseModel, ABC):
         """
 
     @abstractmethod
-    def query_semantic_db(self, query: str, **kwargs) -> list[str]:
+    def query_semantic_db(self, query: str, **kwargs) -> list[dict]:
         """
         Query the semantic database through the RAG API.
-        Returns a list of strings, each representing a result of the query.
+        Returns a list of dicts, each representing a semantic search result.
         """
 
     @abstractmethod
-    def query_qa(self, query: str, **kwargs) -> list[str]:
+    def query_qa(self, query: str, **kwargs) -> list[dict]:
         """
         Query the question answering model through the RAG API.
-        Returns a list of strings, each representing an answer to the query.
+        Returns a list of dicts, each representing an answer to the query.
         """

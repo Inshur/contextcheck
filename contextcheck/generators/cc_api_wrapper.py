@@ -23,7 +23,10 @@ class ContextClueApiWrapper(RagApiWrapperBase):
         )
         response.raise_for_status()
 
-        return [{"id": file["id"], "name": file["name"]} for file in response.json()["documents"]]
+        return [
+            {"id": document["id"], "name": document["name"]}
+            for document in response.json()["documents"]
+        ]
 
     def get_document_chunks(self, document_id: str) -> list[str]:
         response = requests.get(
@@ -51,7 +54,7 @@ class ContextClueApiWrapper(RagApiWrapperBase):
         chunks = response.json()["relevant_documents"]["collection_retriever_entries"]
         return chunks
 
-    def query_qa(self, query: str, **kwargs) -> list[str]:
+    def query_qa(self, query: str, **kwargs) -> list[dict]:
         response = requests.post(
             f"{self.endpoint_base_url}/qa/ask",
             json={
