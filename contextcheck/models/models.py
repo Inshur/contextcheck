@@ -73,7 +73,7 @@ class TestScenario(BaseModel):
                 if isinstance(step, str):
                     new_step = {"name": step, "request": step, "default_request": default_request}
                 elif isinstance(step, dict):
-                    step["default_request"] = step["default_request"] or default_request
+                    step["default_request"] = step.get("default_request", {}) or default_request
                 new_steps.append(new_step)
 
             data["steps"] = new_steps
