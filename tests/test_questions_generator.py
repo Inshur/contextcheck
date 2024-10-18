@@ -17,8 +17,12 @@ def api_wrapper_mock():
         def get_document_chunks(self, document_id: str) -> list[str]:
             return [lorem.paragraph() for _ in range(20)]
 
-        def query_semantic_db(self, query: str) -> list[str]:
-            return [lorem.paragraph() for _ in range(self.top_k)]
+        def query_semantic_db(self, query: str) -> list[dict]:
+            # NOTE RB: top_k does not seem to be a parameter for this model
+            return [{"chunk": lorem.paragraph()} for _ in range(10)]
+
+        def query_qa(self, query: str) -> list[dict]:
+            return [{"result": lorem.paragraph()} for _ in range(20)]
 
     return RagApiWrapperMock()
 
