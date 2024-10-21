@@ -49,6 +49,14 @@ def main():
         "--exit-on-failure", action="store_true", help="Exit with status code 1 if any test fails"
     )
 
+    parser.add_argument(
+        "--aggregate-results", action="store_true", help="Aggregate assertion results"
+    )
+
+    parser.add_argument(
+        "--show-time-statistics", action="store_true", help="Show aggregated time statistics"
+    )
+
     args = parser.parse_args()
     parser.validate_args(args)
 

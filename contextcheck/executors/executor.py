@@ -1,5 +1,3 @@
-from typing import Generator
-
 from loguru import logger
 
 from contextcheck.endpoints.factory import factory as endpoint_factory
@@ -43,7 +41,7 @@ class Executor:
         for test_step in self.run_steps():
             result &= bool(test_step.result)
             if self.early_stop:
-                break            
+                break
         self.test_scenario.result = result
         return result
 
@@ -52,7 +50,7 @@ class Executor:
         step_results = []
         for test_step in self.test_scenario.steps:
             if self.early_stop:
-                break            
+                break
             step = self._run_step(test_step)
             step_results.append(step)
         return step_results
@@ -92,3 +90,11 @@ class Executor:
 
     def summary(self, **kwargs: dict[str, str]):
         self.ui.summary(self, **kwargs)
+
+    def report_results(self, **kwargs):
+        # This function isn't utilized on it's own right now, but is rather used by summary
+        # at least for tui interface, though I leave it as a separate accessible function
+        self.ui.report_results(self, **kwargs)
+
+    def report_time(self, **kwargs):
+        self.ui.report_time(self, **kwargs)

@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Annotated, ClassVar, Self
 
-from pydantic import BaseModel, BeforeValidator, field_validator, model_validator
+from pydantic import BaseModel, BeforeValidator, SerializeAsAny, field_validator, model_validator
 
 from contextcheck.assertions.assertions import AssertionBase
 from contextcheck.assertions.factory import factory as assertions_factory
@@ -22,18 +22,14 @@ class TestStep(BaseModel):
     request: RequestBase
     response: ResponseBase | None = None
     default_request: ClassVar[RequestBase] = RequestBase()
-    asserts: list[AssertionBase] = []
+    asserts: list[SerializeAsAny[AssertionBase]] = []
     result: bool | None = None
 
     @model_validator(mode="before")
     @classmethod
     def from_obj(cls, obj: dict | str) -> dict:
         # Default test step is request with `message` field
-        return (
-            obj
-            if isinstance(obj, dict)
-            else {"name": obj, "request": RequestBase(message=obj)}
-        )
+        return obj if isinstance(obj, dict) else {"name": obj, "request": RequestBase(message=obj)}
 
     @field_validator("request")
     @classmethod
@@ -43,7 +39,8 @@ class TestStep(BaseModel):
     @field_validator("asserts")
     @classmethod
     def prepare_asserts(cls, asserts: list[AssertionBase]) -> list[AssertionBase]:
-        return [assertions_factory(assert_.model_dump()) for assert_ in asserts]
+        prepared_asserts = [assertions_factory(assert_.model_dump()) for assert_ in asserts]
+        return prepared_asserts
 
 
 class TestScenario(BaseModel):
@@ -61,5 +58,5 @@ class TestScenario(BaseModel):
         config = TestConfig.model_validate(cls_dict.get("config", {}) or {})
         if config.default_request:
             TestStep.default_request = config.default_request
-        cls_dict['filename'] = file_path.name 
+        cls_dict["filename"] = file_path.name
         return cls.model_validate(cls_dict)

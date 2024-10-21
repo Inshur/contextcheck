@@ -1,13 +1,14 @@
-from pydantic import BaseModel, model_validator, field_validator
 import os
 import sys
-from typing import Literal
 from datetime import datetime, timezone
+from typing import Literal
+
+from pydantic import BaseModel, field_validator, model_validator
 
 from contextcheck.executors.executor import Executor
-from contextcheck.interfaces.interface_tui import InterfaceTUI
-from contextcheck.interfaces.interface_output_file import InterfaceOutputFile
 from contextcheck.interfaces.interface import InterfaceBase
+from contextcheck.interfaces.interface_output_file import InterfaceOutputFile
+from contextcheck.interfaces.interface_tui import InterfaceTUI
 from contextcheck.models.models import TestScenario
 
 
@@ -18,6 +19,8 @@ class TestsRouter(BaseModel):
     output_folder: str | None = None
     exit_on_failure: bool = False
     global_test_timestamp: str | None = None
+    aggregate_results: bool = False
+    show_time_statistics: bool = False
 
     @field_validator("filename")
     @classmethod
@@ -57,7 +60,10 @@ class TestsRouter(BaseModel):
         executor = Executor(ts, ui=ui, exit_on_failure=self.exit_on_failure)
         scenario_result = executor.run_all()
         executor.summary(
-            output_folder=self.output_folder, global_test_timestamp=self.global_test_timestamp
+            output_folder=self.output_folder,
+            global_test_timestamp=self.global_test_timestamp,
+            aggregate_results=self.aggregate_results,
+            show_time_statistics=self.show_time_statistics,
         )
 
         return scenario_result, executor.early_stop
