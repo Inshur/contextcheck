@@ -9,6 +9,15 @@ from contextcheck.executors.executor import Executor
 from contextcheck.interfaces.interface import InterfaceBase
 
 
+def create_output_path(file_path: str, output_folder: str, suffix: str = "") -> Path:
+    filename = os.path.basename(file_path)  # type: ignore
+    filename = filename.split(".")[0] + suffix
+    date_now = datetime.now(timezone.utc)
+    output_path = f"{output_folder}/{filename}_{date_now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+
+    return output_path, date_now
+
+
 class InterfaceOutputFile(InterfaceBase):
     test_scenario_filename: str | None = None
 
@@ -18,10 +27,9 @@ class InterfaceOutputFile(InterfaceBase):
     def summary(
         self, executor: Executor, output_folder: str, global_test_timestamp: str, **kwargs
     ) -> None:
-        filename = os.path.basename(self.test_scenario_filename)  # type: ignore
-        filename = filename.split(".")[0]
-        date_now = datetime.now(timezone.utc)
-        output_path = f"{output_folder}/{filename}_{date_now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+        output_path, date_now = create_output_path(
+            file_path=self.test_scenario_filename, output_folder=output_folder
+        )
 
         res = executor.test_scenario.model_dump()
         res["global_test_timestamp"] = global_test_timestamp
@@ -41,10 +49,9 @@ class InterfaceOutputFile(InterfaceBase):
     def report_results(
         self, executor: Executor, output_folder: str, global_test_timestamp: str
     ) -> None:
-        filename = os.path.basename(self.test_scenario_filename)  # type: ignore
-        filename = filename.split(".")[0] + "_report"
-        date_now = datetime.now(timezone.utc)
-        output_path = f"{output_folder}/{filename}_{date_now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+        output_path, date_now = create_output_path(
+            file_path=self.test_scenario_filename, output_folder=output_folder, suffix="_report"
+        )
 
         res = {}
         res["global_test_timestamp"] = global_test_timestamp
@@ -59,10 +66,11 @@ class InterfaceOutputFile(InterfaceBase):
     def report_time(
         self, executor: Executor, output_folder: str, global_test_timestamp: str
     ) -> None:
-        filename = os.path.basename(self.test_scenario_filename)  # type: ignore
-        filename = filename.split(".")[0] + "_time_statistics"
-        date_now = datetime.now(timezone.utc)
-        output_path = f"{output_folder}/{filename}_{date_now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+        output_path, date_now = create_output_path(
+            file_path=self.test_scenario_filename,
+            output_folder=output_folder,
+            suffix="_time_statistics",
+        )
 
         res = {}
         res["global_test_timestamp"] = global_test_timestamp
