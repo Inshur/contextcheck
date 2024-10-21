@@ -2,10 +2,18 @@ import os
 from pathlib import Path
 
 import yaml
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 from contextcheck.generators.endpoint_wrapper import RagApiWrapperBase
 from contextcheck.loaders.yaml import load_yaml_file
+
+
+# NOTE RB: There's no yaml for answer generation therefore I've deduced the structure from code
+class DocumentQuestions(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    document: str = Field(description="A document from which a question is derived?")
+    questions: list[str] = Field(description="A list of questions regarding a document")
 
 
 # NOTE RB: It probably won't work with new changes to ContextClue (new checkbox in MR template? :P)
@@ -14,13 +22,16 @@ class AnswerGenerator(BaseModel):
     collection_name: str = "default"
     questions_file: Path
     api_wrapper: RagApiWrapperBase
-    questions: dict = {}  # NOTE RB: questions should be a pydantic model, not a dict
+    questions: list[DocumentQuestions] = Field(
+        default_factory=list, description="A list of nested questions regarding a document"
+    )
     alpha: float = 0.75
     use_ranker: bool = True
     debug: bool = False
 
     def model_post_init(self, __context):
-        self.questions = load_yaml_file(self.questions_file)
+        questions_dict = load_yaml_file(self.questions_file)["questions"]
+        self.questions = TypeAdapter(list[DocumentQuestions]).validate_python(questions_dict)
 
     def generate(self) -> dict:
         """
@@ -32,10 +43,10 @@ class AnswerGenerator(BaseModel):
 
         qa_data = {"QA": []}
 
-        for document_questions in self.questions["questions"]:
-            current_document = document_questions["document"]
+        for document_questions in self.questions:
+            current_document = document_questions.document
             entry = {"document": current_document, "qa": []}
-            list_of_questions = document_questions["questions"]
+            list_of_questions = document_questions.questions
             data = {}
             print("Generating answers for document:", current_document)
             for idx, question in enumerate(list_of_questions):
