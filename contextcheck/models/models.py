@@ -86,3 +86,14 @@ class TestScenario(BaseModel):
         cls_dict = load_yaml_file(file_path=file_path)
         cls_dict["filename"] = file_path.name
         return cls.model_validate(cls_dict)
+
+    def show_test_step_results(self):
+        # NOTE: For better visual aspects we could check rich table
+        print("-" * 12)
+        for step in self.steps:
+            print(f"Name: {step.name}; Result: {step.result}\n")
+            for assertion in step.asserts:
+                assertion_dumped = assertion.model_dump()
+                assertion_ = assertion.eval if "eval" in assertion_dumped else assertion.assertion
+                print(f'Assertion: "{assertion_}", Result: {assertion.result}')
+            print("-" * 12)
