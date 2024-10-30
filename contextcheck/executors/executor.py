@@ -60,7 +60,6 @@ class Executor:
 
         self.ui(test_step)
 
-        # NOTE RB: Dangerous code that runs eval here
         request = test_step.request.build(self.context)
 
         self.ui(request)

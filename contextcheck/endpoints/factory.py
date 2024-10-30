@@ -5,7 +5,6 @@ from contextcheck.endpoints.endpoint_dummy_echo import EndpointDummyEcho
 from contextcheck.endpoints.endpoint_openai_compatible import EndpointOpenAICompatible
 from contextcheck.endpoints.endpoint_tg_chatbot import EndpointTGChatBot
 
-
 ENDPOINT_MAPPING: dict[EndpointsEnum, EndpointBase] = {
     EndpointsEnum.OPENAI: EndpointOpenAICompatible,
     EndpointsEnum.OPENAI_COMPATIBLE: EndpointOpenAICompatible,

@@ -44,7 +44,7 @@ class QuestionsGenerator(BaseModel):
         self.stop_words = set(stopwords.words(["english", "spanish"]))
         self.llm_endpoint = endpoint_factory(self.questions_generator_endpoint_config)
 
-    def preprocess_text(self, text: str, stop_words):
+    def preprocess_text(self, text: str):
         result = []
         for token in simple_preprocess(text, deacc=True):
             if token not in self.stop_words and len(token) > 3:
@@ -52,7 +52,7 @@ class QuestionsGenerator(BaseModel):
         return result
 
     def get_topic_lists_from_chunks(self, documents: list[str]) -> list[list[str]]:
-        processed_documents = [self.preprocess_text(doc, self.stop_words) for doc in documents]
+        processed_documents = [self.preprocess_text(doc) for doc in documents]
 
         dictionary = corpora.Dictionary(processed_documents)
         corpus = [dictionary.doc2bow(doc) for doc in processed_documents]

@@ -1,4 +1,4 @@
-from pydantic import model_serializer, model_validator, Field
+from pydantic import Field, model_serializer, model_validator
 
 from contextcheck.connectors.connector_openai_compatible import ConnectorOpenAICompatible
 from contextcheck.endpoints.endpoint import EndpointBase, EndpointConfig
@@ -7,7 +7,7 @@ from contextcheck.models.response import ResponseBase, ResponseStats
 
 
 class EndpointOpenAICompatibleConfig(EndpointConfig):
-    provider: str | None = "ChatOpenAI"
+    provider: str = "ChatOpenAI"
 
 
 class EndpointOpenAICompatible(EndpointBase):
@@ -19,8 +19,7 @@ class EndpointOpenAICompatible(EndpointBase):
     connector: ConnectorOpenAICompatible = ConnectorOpenAICompatible()
 
     def model_post_init(self, __context) -> None:
-        # NOTE RB: I kinda don't understand it tbh, especially the part with model_dump
-        # NOTE RB: Why is it even there if we exclude all the fields (apart from stats)?
+        # TODO: Check why self.connector.model_copy won't work - hint: field validator of connector
         self.connector = ConnectorOpenAICompatible(
             model=self.config.model,
             provider=self.config.provider,

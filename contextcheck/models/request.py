@@ -47,15 +47,13 @@ class RequestBase(BaseModel):
 
     def build(self, context: dict | None = None) -> Self:
         """Build request based on prototype values."""
-        # NOTE RB: What's the case for using this i.e. when does the message can be of type dict
-        # in TestStep, as otherwise this function will return the exact same model
-        # NOTE RB: And what's the case when the provided message is of type dict that needs to use eval?
 
         def _search_and_replace(d: dict) -> dict:
             """Search recursively dict for computation string and replace it with function result."""
-            # NOTE RB: Hmm, What if d = {"eval": "1 == 2", "value1": {"eval": "1 == 2"}}
+            # NOTE: Hmm, What if d = {"eval": "1 == 2", "value1": {"eval": "1 == 2"}}
             # then the first eval would make d of type bool and d[key] = ... would raise an error
             # Unless the result of an eval is not a dict then this will cause problems
+            # TODO: Fix it if time allows or forbid too deep nesting i.e. one level should be ok
             for key, value in d.items():
                 if key in fields_computation_map:
                     d = fields_computation_map[key](value, context)

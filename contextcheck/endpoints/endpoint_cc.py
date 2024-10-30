@@ -1,11 +1,8 @@
-from pydantic import model_serializer, Field
+from pydantic import Field, model_serializer
 
 from contextcheck.connectors.connector_http import ConnectorHTTP
 from contextcheck.endpoints.endpoint import EndpointBase, EndpointConfig
 from contextcheck.models.request import RequestBase
-
-# NOTE RB: No custom ResponseModel and I suppose it might be needed, e.g. to assign message to model
-# LATER
 
 
 # TODO: Add Fields with defaults and descriptions

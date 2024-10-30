@@ -1,12 +1,17 @@
+from __future__ import annotations
+
 import copy
 from collections import defaultdict
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from loguru import logger
 from pydantic import BaseModel
 
 from contextcheck.assertions.settings import AssertionKind
+
+if TYPE_CHECKING:
+    from contextcheck.executors.executor import Executor
 
 
 class InterfaceBase(BaseModel):
@@ -19,9 +24,8 @@ class InterfaceBase(BaseModel):
     def summary(obj: Any, **kwargs: Any) -> Any:
         logger.info(obj)
 
-    # NOTE RB: # Cannot add proper typing as circular dependencies would arose
     def _create_a_summary_report(
-        self, executor: "Executor"
+        self, executor: Executor
     ) -> dict[str, dict[str, dict[str, float]]]:
         """
         Create a summary of the results obtained from a test scenario
@@ -40,6 +44,9 @@ class InterfaceBase(BaseModel):
 
         # Summarize binary statistics
         def summarize_binary_statistics(data: list[float]) -> dict[str, float]:
+            if not data:
+                return {"mean": 0.0, "count": 0}
+
             count1 = sum(data)
             count = len(data)
             mean = count1 / count
@@ -66,7 +73,7 @@ class InterfaceBase(BaseModel):
                 assertion_results[kind][
                     assertion[kind] if kind != AssertionKind.EVAL else kind
                 ].append(
-                    float(assertion["result"])
+                    float(assertion["result"]) if assertion["result"] is not None else 0.0
                 )  # Dump results to float for easier manipulation
 
         # Copy is technically not necessary, but it logically separates the results from

@@ -9,7 +9,7 @@ from contextcheck.assertions.settings import AssertionKind
 assertions_map = {
     AssertionKind.EVAL: AssertionEval,
     AssertionKind.LLM_METRIC: AssertionLLM,
-    AssertionKind.KIND: AssertionDeterministic,
+    AssertionKind.DETERMINISTIC: AssertionDeterministic,
 }
 
 

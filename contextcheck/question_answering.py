@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 from contextcheck.generators.generate_answers import AnswerGenerator
-from contextcheck.questions_generator import import_class_from_string
+from contextcheck.generators.utils import import_class_from_string
 
 
 def generate_answers(
@@ -50,7 +50,7 @@ def main():
         "--questions-file",
         type=str,
         required=True,
-        help="",
+        help="Path to the YAML file containing the questions.",
     )
     parser.add_argument(
         "--output-file",
@@ -80,7 +80,7 @@ def main():
         help="Use ranker to get relevant documents. Default is True.",
     )
     parser.add_argument(
-        "--colelction-name",
+        "--collection-name",
         type=str,
         default="default",
         help="Name of the collection to use. Default is 'default'.",
@@ -101,7 +101,7 @@ def main():
         top_k=args.top_k,
         questions_file=Path(args.questions_file),
         use_ranker=args.use_ranker,
-        collection_name=args.colelction_name,
+        collection_name=args.collection_name,
         debug=args.debug,
     )
 

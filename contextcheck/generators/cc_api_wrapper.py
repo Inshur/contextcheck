@@ -54,7 +54,7 @@ class ContextClueApiWrapper(RagApiWrapperBase):
         chunks = response.json()["relevant_documents"]["collection_retriever_entries"]
         return chunks
 
-    def query_qa(self, query: str, **kwargs) -> list[dict]:
+    def query_qa(self, query: str, **kwargs) -> dict:
         response = requests.post(
             f"{self.endpoint_base_url}/qa/ask",
             json={
@@ -66,5 +66,5 @@ class ContextClueApiWrapper(RagApiWrapperBase):
             timeout=self.timeout,
         )
         response.raise_for_status()
-        answers = response.json()
-        return answers
+        answer = response.json()
+        return answer

@@ -59,6 +59,9 @@ class AssertionLLM(AssertionBase):
         self, request: RequestBase, response: ResponseBase, eval_endpoint: EndpointBase
     ) -> bool:
         if self.result is None:
+            # This is required as otherwise time statistics will be shared across assertions
+            # for a given TestScenario
+            eval_endpoint = eval_endpoint.model_copy(deep=True)
             metric = llm_metric_factory(metric_type=self.llm_metric)
 
             self.metric_evaluator = LLMMetricEvaluator(

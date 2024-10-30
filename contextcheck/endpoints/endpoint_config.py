@@ -16,6 +16,6 @@ class EndpointsEnum(StrEnum):
 class EndpointConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     kind: EndpointsEnum = EndpointsEnum.OPENAI
-    model: str | None = "gpt-4o-mini"
+    model: str = "gpt-4o-mini"
     temperature: float | None = None
     max_tokens: int | None = None

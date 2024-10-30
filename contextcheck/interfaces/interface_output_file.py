@@ -4,12 +4,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import fsspec
+from loguru import logger
 
 from contextcheck.executors.executor import Executor
 from contextcheck.interfaces.interface import InterfaceBase
 
 
-def create_output_path(file_path: str, output_folder: str, suffix: str = "") -> Path:
+def create_output_path(
+    file_path: str, output_folder: str, suffix: str = ""
+) -> tuple[str, datetime]:
     filename = os.path.basename(file_path)  # type: ignore
     filename = filename.split(".")[0] + suffix
     date_now = datetime.now(timezone.utc)
@@ -90,10 +93,10 @@ class FileHandler:
     def write_file(self, content: str):
         with fsspec.open(self.file_path, "w") as f:
             f.write(content)  # type: ignore
-        print(f"File written to {self.file_path}")
+        logger.info(f"File written to {self.file_path}")
 
     def read_file(self):
         with fsspec.open(self.file_path, "r") as f:
             content = f.read()  # type: ignore
-        print(f"File read from {self.file_path}")
+        logger.info(f"File read from {self.file_path}")
         return content

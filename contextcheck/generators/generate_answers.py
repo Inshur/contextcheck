@@ -8,7 +8,6 @@ from contextcheck.generators.endpoint_wrapper import RagApiWrapperBase
 from contextcheck.loaders.yaml import load_yaml_file
 
 
-# NOTE RB: There's no yaml for answer generation therefore I've deduced the structure from code
 class DocumentQuestions(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
@@ -16,7 +15,6 @@ class DocumentQuestions(BaseModel):
     questions: list[str] = Field(description="A list of questions regarding a document")
 
 
-# NOTE RB: It probably won't work with new changes to ContextClue (new checkbox in MR template? :P)
 class AnswerGenerator(BaseModel):
     top_k: int = 3
     collection_name: str = "default"
@@ -47,34 +45,31 @@ class AnswerGenerator(BaseModel):
             current_document = document_questions.document
             entry = {"document": current_document, "qa": []}
             list_of_questions = document_questions.questions
-            data = {}
             print("Generating answers for document:", current_document)
             for idx, question in enumerate(list_of_questions):
-                answers = self.api_wrapper.query_qa(
+                answer = self.api_wrapper.query_qa(
                     question, use_ranker=self.use_ranker, top_k=self.top_k, alpha=self.alpha
                 )
-                data["item_" + str(idx)] = {
+                qa_item = {
                     "question": question,
-                    "answer": answers["result"],
+                    "answer": answer["result"],
                 }
 
                 if self.debug:
-                    data["item_" + str(idx)] = {
-                        "answers": [
-                            [
-                                {
-                                    "chunk": answer["chunk"],
-                                    "document": answer["metadata"]["document_name"],
-                                }
-                            ]
-                            for answer in answers[
-                                : self.top_k
-                            ]  # NOTE RB: Why self.top_k is used here?
+                    qa_item["chunks_and_documents"] = [
+                        [
+                            {
+                                "chunk": answer["chunk"],
+                                "document": answer["metadata"]["document_name"],
+                            }
                         ]
-                    }
+                        for answer in answer.get("relevant_documents", {}).get(
+                            "collection_retriever_entries", []
+                        )
+                    ]
 
                 print(f"Processing {idx + 1}/{len(list_of_questions)} questions")
-                entry["qa"].append(data["item_" + str(idx)])
+                entry["qa"].append(qa_item)
             qa_data["QA"].append(entry)
 
         return qa_data
