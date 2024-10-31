@@ -2,7 +2,7 @@
 
 ## What are test scenarios
 
-Test scenario is an file in a YAML format.
+Test scenario is a file in a YAML format.
 
 **It consists of 3 sections:** 
 
@@ -93,7 +93,7 @@ For provider-specific configuration refer to [LangChain Chat Models](https://pyt
 
 #### LMM-based evaluator configuration
 
-If you are going to use [LLM-based metrics]() to validate your `endpoint_under_test`, then you need to 
+If you are going to use [LLM-based metrics](llm_based_metrics.md) to validate your `endpoint_under_test`, then is has to be configured accordingly.
 
 In it's simplest format it looks as follows:
 ```yaml
