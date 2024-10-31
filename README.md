@@ -1,20 +1,29 @@
-# ContextCheck
+# ✅ ContextCheck 
 
-Framework for LLM/RAG testing.
+Human-friendly framework to test and evaluate LLMs, RAGs and ChatBots.
 
 ## Features
 
-⚠️ Under development
-
-- Test scenario definition by .yaml files
-- Endpoint configuration (openai, http)
-- JSON request/response 
+- Simple test scenario definition by readable .yaml files
+- Flexible endpoint-under-test configuration (openai, http)
+- Flexible JSON request/response models
 - Variables and Jinja2 templating for yaml files
-- Response validation using `eval` 
-- Dynamic fields using `eval` - including passing fields from last response
+- Response validation using heuristics, LLM as judge, human labeling...
 - Pretty printing using `rich` package
 
 ## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+### Prerequisites
+
+What things you need to install the software and how to install them
+
+```
+Give examples
+```
+
+### Installing
 
 1. **Setup and initialize Poetry.**
 
@@ -69,7 +78,39 @@ Use env variable `OPENAI_API_KEY` to be able to run:
 - `tests/scenario_openai.yaml`
 - `tests/scenario_defaults.yaml`
 
-## Tests
+
+## Built With
+
+* pydantic
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+
+
+## Authors
+
+* **XYZ** - *Initial work* 
+
+See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* Hat tip to anyone whose code was used
+* Inspiration
+* etc
+
+
+
+
+
+## Tests and development
+
+Contributions are welcomed!
 
 Only end-to-end tests are currently available.
 
