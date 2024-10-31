@@ -2,10 +2,17 @@ import os
 from pathlib import Path
 
 import yaml
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 from contextcheck.generators.endpoint_wrapper import RagApiWrapperBase
 from contextcheck.loaders.yaml import load_yaml_file
+
+
+class DocumentQuestions(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    document: str = Field(description="A document from which a question is derived?")
+    questions: list[str] = Field(description="A list of questions regarding a document")
 
 
 class AnswerGenerator(BaseModel):
@@ -13,13 +20,16 @@ class AnswerGenerator(BaseModel):
     collection_name: str = "default"
     questions_file: Path
     api_wrapper: RagApiWrapperBase
-    questions: dict = {}
+    questions: list[DocumentQuestions] = Field(
+        default_factory=list, description="A list of nested questions regarding a document"
+    )
     alpha: float = 0.75
     use_ranker: bool = True
     debug: bool = False
 
     def model_post_init(self, __context):
-        self.questions = load_yaml_file(self.questions_file)
+        questions_dict = load_yaml_file(self.questions_file)["questions"]
+        self.questions = TypeAdapter(list[DocumentQuestions]).validate_python(questions_dict)
 
     def generate(self) -> dict:
         """
@@ -31,32 +41,35 @@ class AnswerGenerator(BaseModel):
 
         qa_data = {"QA": []}
 
-        for document_questions in self.questions["questions"]:
-            current_document = document_questions["document"]
+        for document_questions in self.questions:
+            current_document = document_questions.document
             entry = {"document": current_document, "qa": []}
-            list_of_questions = document_questions["questions"]
-            data = {}
-            print('Generating answers for document:', current_document)
+            list_of_questions = document_questions.questions
+            print("Generating answers for document:", current_document)
             for idx, question in enumerate(list_of_questions):
-                answers = self.api_wrapper.query_qa(question,
-                                                    **{"use_ranker": self.use_ranker,
-                                                       "top_k": self.top_k,
-                                                       "alpha": self.alpha,
-                                                       })
-                data["item_" + str(idx)] = {
+                answer = self.api_wrapper.query_qa(
+                    question, use_ranker=self.use_ranker, top_k=self.top_k, alpha=self.alpha
+                )
+                qa_item = {
                     "question": question,
-                    "answer": answers['result'],
+                    "answer": answer["result"],
                 }
 
                 if self.debug:
-                    data['item_' + str(idx)] = {"answers": [[{'chunk': answer['chunk'],
-                                                              'document': answer['metadata'][
-                                                                  'document_name'],
-                                                              }] for answer in
-                                                            answers[:self.top_k]]}
+                    qa_item["chunks_and_documents"] = [
+                        [
+                            {
+                                "chunk": answer["chunk"],
+                                "document": answer["metadata"]["document_name"],
+                            }
+                        ]
+                        for answer in answer.get("relevant_documents", {}).get(
+                            "collection_retriever_entries", []
+                        )
+                    ]
 
                 print(f"Processing {idx + 1}/{len(list_of_questions)} questions")
-                entry["qa"].append(data["item_" + str(idx)])
+                entry["qa"].append(qa_item)
             qa_data["QA"].append(entry)
 
         return qa_data

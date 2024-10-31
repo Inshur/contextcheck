@@ -3,6 +3,7 @@ import sys
 from datetime import datetime, timezone
 from typing import Literal
 
+from loguru import logger
 from pydantic import BaseModel, field_validator, model_validator
 
 from contextcheck.executors.executor import Executor
@@ -82,6 +83,10 @@ class TestsRouter(BaseModel):
                 if filename.endswith(".yaml"):
                     filenames.append(filename)
 
+        if not filenames:
+            logger.warning("No test scenario to run")
+
+        # TODO: Potential place to increase performance by running several scenarios at once
         for filename in filenames:
             scenario_result, early_stop = self._run_test_scenario(filename, interface_type)
             scenario_results.append(scenario_result)

@@ -1,0 +1,33 @@
+config:
+  endpoint_under_test:
+    kind: openai
+    model: gpt-4o-mini
+    temperature: 0.2
+  eval_endpoint:
+    kind: openai
+    model: gpt-4o
+    temperature: 0.0
+
+steps:
+  - name: Write sucess
+    request: 'Please write only "success" as a response'
+    asserts:
+      - '"success" == response.message'
+      - 'response.stats.conn_duration < 10'
+  - name: Capital of Poland
+    request: 'What is the capital of Poland?'
+    asserts:
+      - '"Warsaw" in response.message'
+  - name: Test model grading QA evaluator
+    request:
+      message: "Please write a 5 line poem about AI."
+    asserts:
+      - llm_metric: model-grading-qa
+        assertion: Text should be a poem about AI.
+      - llm_metric: model-grading-qa
+        assertion: Text should be a report on taxes. # Misleading assertion for demo purposes
+  - name: Deterministic assertion test
+    request: 'What is the capital of France?'
+    asserts:
+      - kind: contains
+        assertion: 'Paris'

@@ -1,5 +1,5 @@
-from argparse import ArgumentParser
 import sys
+from argparse import ArgumentParser
 
 from contextcheck.endpoints.endpoint_config import EndpointConfig
 from contextcheck.generators.generate_questions import QuestionsGenerator
@@ -55,26 +55,28 @@ def main():
     parser.add_argument(
         "--num-topics",
         type=int,
-        default=3,
+        default=10,
         help="Number of topics generated for each file. Default is 10",
     )
     parser.add_argument(
         "--questions-per-topic",
         type=int,
-        default=2,
-        help="Number of questions generater per each topic. Default is 3.",
+        default=3,
+        help="Number of questions generated per each topic. Default is 3.",
     )
     parser.add_argument(
         "--llm-model-provider",
         type=str,
         default="ChatOpenAI",
-        help="LLM model provider. Default one is OpenAI.",
+        help="LLM model provider. Default one is OpenAI. Please refer to "
+        "https://python.langchain.com/v0.2/docs/integrations/chat/ for more information",
     )
     parser.add_argument(
         "--llm-model",
         type=str,
         default="gpt-4o-mini",
-        help="LLM model to use. Default one is GPT-4o-Mini.",
+        help="LLM model to use. Default one is GPT-4o-Mini."
+        "Please also ensure that the chosen model is compatible with a given provider.",
     )
 
     args = parser.parse_args(args=None if sys.argv[1:] else ["--help"])

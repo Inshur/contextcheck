@@ -1,4 +1,3 @@
-import argparse
 from pathlib import Path
 from typing import Any
 
@@ -13,7 +12,7 @@ from rich.text import Text
 from contextcheck.assertions.assertions import AssertionBase
 from contextcheck.executors.executor import Executor
 from contextcheck.interfaces.interface import InterfaceBase
-from contextcheck.models.models import TestScenario, TestStep
+from contextcheck.models.models import TestStep
 from contextcheck.models.request import RequestBase
 from contextcheck.models.response import ResponseBase
 

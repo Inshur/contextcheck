@@ -14,7 +14,7 @@ class CustomArgumentParser(argparse.ArgumentParser):
                 self.error("--filename or --folder is required")
             if (args.filename or args.folder) and not args.output_folder:
                 self.error(
-                    '--output-folder is required when --output is "console" and filename or folder is set'
+                    '--output-folder is required when --output-type is "file" and filename or folder is set'
                 )
 
 

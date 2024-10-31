@@ -50,6 +50,10 @@ class RequestBase(BaseModel):
 
         def _search_and_replace(d: dict) -> dict:
             """Search recursively dict for computation string and replace it with function result."""
+            # NOTE: Hmm, What if d = {"eval": "1 == 2", "value1": {"eval": "1 == 2"}}
+            # then the first eval would make d of type bool and d[key] = ... would raise an error
+            # Unless the result of an eval is not a dict then this will cause problems
+            # TODO: Fix it if time allows or forbid too deep nesting i.e. one level should be ok
             for key, value in d.items():
                 if key in fields_computation_map:
                     d = fields_computation_map[key](value, context)

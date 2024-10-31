@@ -1,17 +1,21 @@
+from enum import StrEnum
+
 from pydantic import BaseModel, ConfigDict
 
 
+class EndpointsEnum(StrEnum):
+    OPENAI = "openai"
+    OPENAI_COMPATIBLE = "openai_compatible"
+    TG_CHATBOT = "tg_chatbot"
+    ECHO = "echo"
+    CC_PROMPT_LLM = "cc_prompt_llm"
+    CC_SS = "cc_ss"
+
+
+# NOTE: Not every Endpoint needs to use custom config through extension of the EndpointConfig
 class EndpointConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
-    kind: str = "openai"
-    url: str = ""  # AnyUrl type can be applied
-    model: str | None = "gpt-4o-mini"
-    additional_headers: dict = {}
-
-    provider: str | None = None
+    kind: EndpointsEnum = EndpointsEnum.OPENAI
+    model: str = "gpt-4o-mini"
     temperature: float | None = None
     max_tokens: int | None = None
-
-    top_k: int = 3
-    use_ranker: bool = True
-    collection_name: str = "default"

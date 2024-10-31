@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class ResponseStats(BaseModel):

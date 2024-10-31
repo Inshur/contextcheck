@@ -1,9 +1,9 @@
-from argparse import ArgumentParser
 import sys
+from argparse import ArgumentParser
 from pathlib import Path
 
 from contextcheck.generators.generate_answers import AnswerGenerator
-from contextcheck.questions_generator import import_class_from_string
+from contextcheck.generators.utils import import_class_from_string
 
 
 def generate_answers(
@@ -29,13 +29,14 @@ def generate_answers(
     """
     api_wrapper = import_class_from_string(wrapper_class_path)
 
-    generator_args = {"api_wrapper": api_wrapper(),
-                      "top_k": top_k,
-                      "questions_file": questions_file,
-                      "use_ranker": use_ranker,
-                      "collection_name": collection_name,
-                      "debug": debug,
-                      }
+    generator_args = {
+        "api_wrapper": api_wrapper(),
+        "top_k": top_k,
+        "questions_file": questions_file,
+        "use_ranker": use_ranker,
+        "collection_name": collection_name,
+        "debug": debug,
+    }
 
     generator = AnswerGenerator(**generator_args)
     generator.save_to_yaml(output_file)
@@ -49,22 +50,22 @@ def main():
         "--questions-file",
         type=str,
         required=True,
-        help="",
+        help="Path to the YAML file containing the questions.",
     )
     parser.add_argument(
         "--output-file",
         type=str,
         required=True,
         help="Output path and filename to save the generated questions. "
-             "Example: 'my_folder/my_file.yaml'. If folder does not exist, it will be created.",
+        "Example: 'my_folder/my_file.yaml'. If folder does not exist, it will be created.",
     )
     parser.add_argument(
         "--wrapper-class-path",
         type=str,
         required=True,
         help="Full path to the API wrapper class definition. "
-             "Example: For a class 'ClassName' defined in file 'module/submodule.py' use format"
-             " 'module.submodule.ClassName'.",
+        "Example: For a class 'ClassName' defined in file 'module/submodule.py' use format"
+        " 'module.submodule.ClassName'.",
     )
     parser.add_argument(
         "--top-k",
@@ -79,7 +80,7 @@ def main():
         help="Use ranker to get relevant documents. Default is True.",
     )
     parser.add_argument(
-        "--colelction-name",
+        "--collection-name",
         type=str,
         default="default",
         help="Name of the collection to use. Default is 'default'.",
@@ -90,7 +91,6 @@ def main():
         type=bool,
         action="store_true",
         help="It will append semantic search chunks along with the questions",
-
     )
 
     args = parser.parse_args(args=None if sys.argv[1:] else ["--help"])
@@ -101,9 +101,8 @@ def main():
         top_k=args.top_k,
         questions_file=Path(args.questions_file),
         use_ranker=args.use_ranker,
-        collection_name=args.colelction_name,
+        collection_name=args.collection_name,
         debug=args.debug,
-
     )
 
 

@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Annotated, ClassVar, Self
+from typing import Annotated, Any, Self
 
 from pydantic import BaseModel, BeforeValidator, SerializeAsAny, field_validator, model_validator
 
@@ -21,7 +21,7 @@ class TestStep(BaseModel):
     name: str
     request: RequestBase
     response: ResponseBase | None = None
-    default_request: ClassVar[RequestBase] = RequestBase()
+    default_request: RequestBase = RequestBase()
     asserts: list[SerializeAsAny[AssertionBase]] = []
     result: bool | None = None
 
@@ -31,10 +31,11 @@ class TestStep(BaseModel):
         # Default test step is request with `message` field
         return obj if isinstance(obj, dict) else {"name": obj, "request": RequestBase(message=obj)}
 
-    @field_validator("request")
-    @classmethod
-    def use_default_request(cls, req: RequestBase) -> RequestBase:
-        return cls.default_request.model_copy(update=req.model_dump())
+    @model_validator(mode="after")
+    def use_default_request(self) -> Self:
+        if self.default_request:
+            self.request = self.default_request.model_copy(update=self.request.model_dump())
+        return self
 
     @field_validator("asserts")
     @classmethod
@@ -50,13 +51,49 @@ class TestScenario(BaseModel):
     result: bool | None = None
     filename: str | None = None
 
+    @model_validator(mode="before")
     @classmethod
-    def from_yaml(cls, file_path: Path) -> Self:
-        cls_dict = load_yaml_file(file_path)
+    def provide_default_request_for_steps(cls, data: Any) -> Any:
+        default_request = None
+        steps = None
+        if isinstance(data, BaseModel):
+            data = data.model_dump()
 
-        # Get config here to set default request
-        config = TestConfig.model_validate(cls_dict.get("config", {}) or {})
-        if config.default_request:
-            TestStep.default_request = config.default_request
+        if isinstance(data, dict):
+            if config := data.get("config", {}):
+                if isinstance(config, dict) and config.get("default_request", {}):
+                    default_request = config.get("default_request")
+
+            steps = data.get("steps", [])
+
+        if default_request is not None and isinstance(steps, list) and steps:
+            new_steps = []
+            for step in steps:
+                new_step = step
+                if isinstance(step, str):
+                    new_step = {"name": step, "request": step, "default_request": default_request}
+                elif isinstance(step, dict):
+                    step["default_request"] = step.get("default_request", {}) or default_request
+                new_steps.append(new_step)
+
+            data["steps"] = new_steps
+        # We can return the same data, as everything was in place
+        return data
+
+    @classmethod
+    def from_yaml(cls, file_path: Path | str) -> Self:
+        file_path = Path(file_path)
+        cls_dict = load_yaml_file(file_path=file_path)
         cls_dict["filename"] = file_path.name
         return cls.model_validate(cls_dict)
+
+    def show_test_step_results(self):
+        # NOTE: For better visual aspects we could check rich table
+        print("-" * 12)
+        for step in self.steps:
+            print(f"Name: {step.name}; Result: {step.result}\n")
+            for assertion in step.asserts:
+                assertion_dumped = assertion.model_dump()
+                assertion_ = assertion.eval if "eval" in assertion_dumped else assertion.assertion
+                print(f'Assertion: "{assertion_}", Result: {assertion.result}')
+            print("-" * 12)

@@ -1,6 +1,10 @@
+from pathlib import Path
+from tempfile import NamedTemporaryFile
 import pytest
 
+from contextcheck import TestScenario
 from tests.utils import executor
+from contextcheck.executors.executor import Executor
 
 invalid_config = """
 config:
@@ -38,10 +42,14 @@ config:
 """
 
 
-@pytest.mark.parametrize("executor", [invalid_config], indirect=True)
-def test_invalid_config(executor):
-    with pytest.raises(ValueError, match="Provider 'Foo' not found"):
-        executor.run_all()
+def test_invalid_config():
+    with NamedTemporaryFile("w", suffix=".yaml") as f:
+        f.write(invalid_config)
+        f.flush()
+
+        with pytest.raises(ValueError, match="Provider 'Foo' not found"):
+            ts = TestScenario.from_yaml(Path(f.name))
+            Executor(test_scenario=ts)
 
 
 @pytest.mark.parametrize("executor", [ollama_config], indirect=True)

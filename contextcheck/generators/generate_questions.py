@@ -36,22 +36,23 @@ class QuestionsGenerator(BaseModel):
     questions_generator_endpoint_config: EndpointConfig
     llm_endpoint: EndpointBase | None = None
 
-    stop_words: set = set(stopwords.words(["english", "spanish"]))
+    stop_words: set = set()
     generated_questions: list[str] = []
 
     def model_post_init(self, __context) -> None:
         nltk.download("stopwords")
+        self.stop_words = set(stopwords.words(["english", "spanish"]))
         self.llm_endpoint = endpoint_factory(self.questions_generator_endpoint_config)
 
-    def preprocess_text(self, text: str, stop_words):
+    def preprocess_text(self, text: str):
         result = []
         for token in simple_preprocess(text, deacc=True):
             if token not in self.stop_words and len(token) > 3:
                 result.append(token)
         return result
 
-    def get_topic_lists_from_chunks(self, documents: list[str]):
-        processed_documents = [self.preprocess_text(doc, self.stop_words) for doc in documents]
+    def get_topic_lists_from_chunks(self, documents: list[str]) -> list[list[str]]:
+        processed_documents = [self.preprocess_text(doc) for doc in documents]
 
         dictionary = corpora.Dictionary(processed_documents)
         corpus = [dictionary.doc2bow(doc) for doc in processed_documents]
@@ -78,11 +79,11 @@ class QuestionsGenerator(BaseModel):
         message = f"{chunks_joined}.\n\n------\n{prompt}"
         return RequestBase(message=message)
 
-    def _parse_response(self, response: ResponseBase) -> list[str]:
+    def _parse_response(self, response: ResponseBase, split_characters: str = "\n") -> list[str]:
         """Split the response by newlines and extract the question from each JSON entity.
         Return a list of questions."""
         msg = response.message
-        questions = msg.split("\n")
+        questions = msg.split(split_characters)
         parsed_questions = []
         for q in questions:
             try:

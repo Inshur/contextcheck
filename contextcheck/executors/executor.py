@@ -46,7 +46,7 @@ class Executor:
         return result
 
     def run_steps(self) -> list[TestStep]:
-        """Run and yield steps iteratively."""
+        """Run all steps and return them."""
         step_results = []
         for test_step in self.test_scenario.steps:
             if self.early_stop:
