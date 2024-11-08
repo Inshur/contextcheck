@@ -21,11 +21,9 @@ A human-friendly framework for testing and evaluating LLMs, RAGs, and chatbots.
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 
-🚧 TODO: installation using pypi repo
-
-
 ### Installing
 
+🚧 TODO: installation using pypi repo
 
 1. **Setup and initialize Poetry.**
 
@@ -39,6 +37,10 @@ These instructions will get you a copy of the project up and running on your loc
    ccheck --help
    ```
 
+### Tutorial
+
+Please refer to `examples/` folder for the tutorial.
+
 ### The `ccheck` Command Features
 
 #### Output Test Results to Console
@@ -51,19 +53,7 @@ These instructions will get you a copy of the project up and running on your loc
   ```sh
   ccheck --output-type console --filename path/to/file.yaml path/to/another_file.yaml
   ```
-- **Run all scenarios from a folder and output results to the console:**
-  ```sh
-  ccheck --output-type console --folder my_tests
-  ```
 
-#### Output Test Results to JSON Files
-
-The `--output-type file` option works similarly to `--output-type console`. It requires either `--filename` or `--folder`, and also an `--output-folder` where the test results will be saved. Each test scenario will be saved as a separate JSON file with the current date and time included in the filename.
-
-- **Example:**
-  ```sh
-  ccheck --output-type file --folder my_tests --output-folder test_results
-  ```
 
 #### Running in CI/CD
 
