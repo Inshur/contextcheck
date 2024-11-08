@@ -1,29 +1,31 @@
-# ✅ ContextCheck 
+![image](./docs/contextchecklogo.png)
 
-Human-friendly framework to test and evaluate LLMs, RAGs and ChatBots.
+# ContextCheck 
+
+A human-friendly framework for testing and evaluating LLMs, RAGs, and chatbots.
+
+**ContextCheck** is an open-source framework designed to evaluate, test, and validate large language models (LLMs), Retrieval-Augmented Generation (RAG) systems, and chatbots. It provides tools to automatically generate queries, request completions, detect regressions, perform penetration tests, and assess hallucinations, ensuring the robustness and reliability of these systems. ContextCheck is configurable via YAML and can be integrated into continuous integration (CI) pipelines for automated testing.
 
 ## Features
 
-- Simple test scenario definition by readable .yaml files
-- Flexible endpoint-under-test configuration (openai, http)
-- Flexible JSON request/response models
-- Variables and Jinja2 templating for yaml files
-- Response validation using heuristics, LLM as judge, human labeling...
-- Pretty printing using `rich` package
+- **Simple test scenario definition** using human-readable `.yaml` files
+- **Flexible endpoint configuration** for OpenAI, HTTP, and more
+- **Customizable JSON request/response models**
+- **Support for variables and Jinja2 templating** in YAML files
+- **Response validation** options, including heuristics, LLM-based judgment, and human labeling
+- **Enhanced output formatting** with the `rich` package for clear, readable displays
+
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
-### Prerequisites
 
-What things you need to install the software and how to install them
+🚧 TODO: installation using pypi repo
 
-```
-Give examples
-```
 
 ### Installing
+
 
 1. **Setup and initialize Poetry.**
 
@@ -79,15 +81,6 @@ Use env variable `OPENAI_API_KEY` to be able to run:
 - `tests/scenario_defaults.yaml`
 
 
-## Built With
-
-* pydantic
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-
 ## Authors
 
 Addepto Team:
@@ -98,25 +91,14 @@ Addepto Team:
 * Vadym Mariiechko
 * Michal Tarkowski
 
-* **XYZ** - *Initial work* 
-
-See also the list of [contributors](https://github.com/contextcheck/contributors) who participated in this project.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
 
 
-
-
-
-## Tests and development
+## Contributing, tests and development
 
 Contributions are welcomed!
 
