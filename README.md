@@ -71,7 +71,9 @@ Use env variable `OPENAI_API_KEY` to be able to run:
 - `tests/scenario_defaults.yaml`
 
 
-## Authors
+## Made with ❤️ by the Addepto Team
+
+ContextCheck is an extension of the [ContextClue](https://context-clue.com/) product, created by the [Addepto](https://addepto.com/) team. This project is the result of our team’s dedication, combining innovation and expertise.
 
 Addepto Team:
 
@@ -81,6 +83,7 @@ Addepto Team:
 * Vadym Mariiechko
 * Michal Tarkowski
 
+Like what we’re building? ⭐ Give it a star to support its development!
 
 ## License
 
