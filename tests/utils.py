@@ -1,5 +1,4 @@
 from pathlib import Path
-from tempfile import NamedTemporaryFile
 
 import pytest
 
@@ -8,10 +7,9 @@ from contextcheck.executors.executor import Executor
 
 
 @pytest.fixture
-def executor(request):
-    with NamedTemporaryFile("w", suffix=".yaml") as f:
-        f.write(request.param)
-        f.flush()
+def executor(request, tmp_path: Path):
+    temp_file = tmp_path / "test.yaml"
+    temp_file.write_text(request.param)
 
-        ts = TestScenario.from_yaml(Path(f.name))
-        return Executor(ts)
+    ts = TestScenario.from_yaml(temp_file)
+    return Executor(ts)

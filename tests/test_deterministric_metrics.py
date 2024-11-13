@@ -1,5 +1,5 @@
 from pathlib import Path
-from tempfile import NamedTemporaryFile
+
 import pytest
 
 from contextcheck import TestScenario
@@ -108,7 +108,6 @@ steps:
 """
 
 
-
 @pytest.mark.parametrize("executor", [config_is_valid_json], indirect=True)
 def test_is_valid_json(executor):
     executor.run_all()
@@ -126,7 +125,7 @@ steps:
     request: '{"name": "John", "age": 30}'
     asserts:
       - kind: has-valid-json-schema
-        assertion: 
+        assertion:
             type: object
             properties:
                 name:
@@ -137,7 +136,7 @@ steps:
                     maximum: 150
             required: ["name", "age"]
       - kind: has-valid-json-schema
-        assertion: 
+        assertion:
             type: object
             properties:
                 name:
@@ -219,10 +218,11 @@ steps:
 """
 
 
-def test_regex_exception():
-    with NamedTemporaryFile("w", suffix=".yaml") as f:
-        f.write(config_regex_2)
-        f.flush()
+def test_regex_exception(tmp_path: Path):
+    temp_file = tmp_path / "test.yaml"
+    temp_file.write_text(config_regex_2)
 
-        with pytest.raises(ValueError, match="Yaml parsing error. It was probably caused by your 'regex' assertion"):
-            TestScenario.from_yaml(Path(f.name))
+    with pytest.raises(
+        ValueError, match="Yaml parsing error. It was probably caused by your 'regex' assertion"
+    ):
+        TestScenario.from_yaml(temp_file)
