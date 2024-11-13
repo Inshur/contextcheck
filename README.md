@@ -1,4 +1,4 @@
-![image](./docs/contextchecklogo.png)
+![image](./docs/contextcheck_logo_violet.png)
 
 # ContextCheck 
 
