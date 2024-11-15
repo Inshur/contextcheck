@@ -1,5 +1,8 @@
 [tool.poetry]
-name = "contextcheck"
+name = "ccheck"
+packages = [
+    { include="contextcheck", from="." },
+]
 version = "0.1.0"
 description = "A human-friendly framework for testing and evaluating LLMs, RAGs, and chatbots."
 authors = ["Addepto <hi@addepto.com>", "Michal Tarkowski <michal.tarkowski@addepto.com>", "Bartlomiej Grasza <bartlomiej.grasza@addepto.com>", "Radoslaw Bodus <radoslaw.bodus@addepto.com>", "Vadym Mariiechko <vadym.mariiechko@addepto.com>", "Volodymyr Kepsha <volodymyr.kepsha@addepto.com>"]
