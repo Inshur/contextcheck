@@ -1,9 +1,19 @@
 [tool.poetry]
 name = "contextcheck"
 version = "0.1.0"
-description = "Validation and test framework for llm-based applications"
+description = "A human-friendly framework for testing and evaluating LLMs, RAGs, and chatbots."
 authors = ["Addepto <hi@addepto.com>", "Michal Tarkowski <michal.tarkowski@addepto.com>", "Bartlomiej Grasza <bartlomiej.grasza@addepto.com>", "Radoslaw Bodus <radoslaw.bodus@addepto.com>", "Vadym Mariiechko <vadym.mariiechko@addepto.com>", "Volodymyr Kepsha <volodymyr.kepsha@addepto.com>"]
 readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/Addepto/contextcheck"
+repository = "https://github.com/Addepto/contextcheck"
+keywords = ["LLM", "RAG", "Chatbot", "Testing", "Validation"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Testing",
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"
