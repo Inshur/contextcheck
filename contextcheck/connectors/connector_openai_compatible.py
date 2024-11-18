@@ -1,5 +1,5 @@
 import dotenv
-from langchain import chat_models
+from langchain_community import chat_models
 from langchain_community.adapters import openai as openai_compatible
 from pydantic import Field, field_validator
 
