@@ -1,10 +1,10 @@
 from pathlib import Path
-from tempfile import NamedTemporaryFile
+
 import pytest
 
 from contextcheck import TestScenario
-from tests.utils import executor
 from contextcheck.executors.executor import Executor
+from tests.utils import executor
 
 invalid_config = """
 config:
@@ -28,7 +28,7 @@ steps:
    - name: Send hello
      request: 'Say "Hello"'
      asserts:
-        - '"Hello" in response.message'      
+        - '"Hello" in response.message'
 """
 
 openai_config = """
@@ -42,14 +42,13 @@ config:
 """
 
 
-def test_invalid_config():
-    with NamedTemporaryFile("w", suffix=".yaml") as f:
-        f.write(invalid_config)
-        f.flush()
+def test_invalid_config(tmp_path: Path):
+    temp_file = tmp_path / "test.yaml"
+    temp_file.write_text(invalid_config)
 
-        with pytest.raises(ValueError, match="Provider 'Foo' not found"):
-            ts = TestScenario.from_yaml(Path(f.name))
-            Executor(test_scenario=ts)
+    with pytest.raises(ValueError, match="Provider 'Foo' not found"):
+        ts = TestScenario.from_yaml(temp_file)
+        Executor(test_scenario=ts)
 
 
 @pytest.mark.parametrize("executor", [ollama_config], indirect=True)
