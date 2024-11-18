@@ -39,7 +39,9 @@ class AssertionEval(AssertionBase):
         if self.result is None:
             try:
                 # NOTE: I suppose running eval has some major security risks attached
-                result = eval(self.eval)
+                # Pass 'response' via 'globals' to ensure it's accessible in all scopes
+                # within eval()
+                result = eval(self.eval, {"response": response}, {})
             except NameError:
                 raise NameError(f"Given eval `{self.eval}` uses non-existent name.")
             if not isinstance(result, bool):
@@ -92,8 +94,9 @@ class DeterministicMetricsEnum(StrEnum):
 
 DETERMINISTIC_METRICS_MAPPING = {
     DeterministicMetricsEnum.CONTAINS: lambda assertion, response: assertion in response,
-    DeterministicMetricsEnum.ICONTAINS: lambda assertion, response: assertion.lower()
-    in response.lower(),
+    DeterministicMetricsEnum.ICONTAINS: (
+        lambda assertion, response: assertion.lower() in response.lower()
+    ),
     DeterministicMetricsEnum.CONTAINS_ALL: lambda assertion, response: all(
         [assertion in response for assertion in assertion]
     ),
@@ -127,7 +130,6 @@ class AssertionDeterministic(AssertionBase):
         self, request: RequestBase, response: ResponseBase, eval_endpoint=EndpointBase
     ) -> bool:
         if self.result is None:
-
             if self.kind in DETERMINISTIC_METRICS_MAPPING:
                 self.result = DETERMINISTIC_METRICS_MAPPING[self.kind](
                     self.assertion, response.message

@@ -14,6 +14,7 @@ steps:
       - eval: '"Foo" in response.message'
       - eval: '"bar" in response.message'
       - eval: '"Foo bar foo" == response.message'
+      - eval: 'all(j in response.message for j in ["Foo", "bar", "foo"])'
       - eval: '"fo fo" in response.message'
 """
 
@@ -65,7 +66,8 @@ def test_eval_messages(executor):
     assert executor.test_scenario.steps[0].asserts[0].result is True
     assert executor.test_scenario.steps[0].asserts[1].result is True
     assert executor.test_scenario.steps[0].asserts[2].result is True
-    assert executor.test_scenario.steps[0].asserts[3].result is False
+    assert executor.test_scenario.steps[0].asserts[3].result is True
+    assert executor.test_scenario.steps[0].asserts[4].result is False
 
 
 @pytest.mark.parametrize("executor", [config_eval_stats], indirect=True)
