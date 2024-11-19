@@ -16,16 +16,20 @@ def load_yaml_file(file_path: Path, parse_template: bool = True) -> dict:
         # Get variables from original yaml:
         try:
             yaml_dict_without_template = yaml.safe_load(yaml_content)
-        except yaml.scanner.ScannerError as e: # type: ignore
-            message = ("Yaml parsing error. It was probably caused by your 'regex' assertion " 
-                f"defined with double-quotes.\nUse single quotes or no quotes to fix it.\nError details:\n\n{e}")
+        except yaml.scanner.ScannerError as e:  # type: ignore
+            message = (
+                "Yaml parsing error. It was probably caused by your 'regex' assertion defined with"
+                f" double-quotes.\nUse single quotes or no quotes to fix it.\nError details:\n\n{e}"
+            )
             raise ValueError(message)
-            
-        
+
         variables = yaml_dict_without_template.get("variables", {})
 
         # Some variables text can be multiline, so we need to replace newlines with spaces
-        variables = {key: value.replace("\n", " ") for key, value in variables.items()}
+        variables = {
+            key: value.replace("\n", " ") if isinstance(value, str) else value
+            for key, value in variables.items()
+        }
 
         # Create jinja2 template from original yaml and render it using variables
         template = Template(yaml_content)
