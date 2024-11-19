@@ -67,6 +67,7 @@ class TestsRouter(BaseModel):
 
     def run_tests(self):
         scenario_results = []
+        executors: list[Executor] = []
         type_map = {"console": InterfaceTUI, "file": InterfaceOutputFile}
         interface_type = type_map[self.output_type]
 
@@ -80,25 +81,32 @@ class TestsRouter(BaseModel):
 
         # TODO: Potential place to increase performance by running several scenarios at once
         for filename in filenames:
-            scenario_result, early_stop = self._run_test_scenario(filename, interface_type)
+            executor, scenario_result, early_stop = self._run_test_scenario(
+                filename, interface_type
+            )
+            executors.append(executor)
             scenario_results.append(scenario_result)
             if self.exit_on_failure and early_stop:
                 break
 
+        for executor in executors:
+            executor.summary(
+                output_folder=str(self.output_folder) if self.output_folder else None,
+                global_test_timestamp=self.global_test_timestamp,
+                aggregate_results=self.aggregate_results,
+                show_time_statistics=self.show_time_statistics,
+            )
+
         if self.exit_on_failure and not all(scenario_results):
             sys.exit(1)
 
-    def _run_test_scenario(self, filename: Path, interface_type: InterfaceBase) -> bool | None:
+    def _run_test_scenario(
+        self, filename: Path, interface_type: InterfaceBase
+    ) -> tuple[Executor, bool | None, bool]:
         ui = interface_type(test_scenario_filename=str(filename))  # type: ignore
         ts = TestScenario.from_yaml(ui.get_scenario_path())
 
         executor = Executor(ts, ui=ui, exit_on_failure=self.exit_on_failure)
         scenario_result = executor.run_all()
-        executor.summary(
-            output_folder=str(self.output_folder) if self.output_folder else None,
-            global_test_timestamp=self.global_test_timestamp,
-            aggregate_results=self.aggregate_results,
-            show_time_statistics=self.show_time_statistics,
-        )
 
-        return scenario_result, executor.early_stop
+        return executor, scenario_result, executor.early_stop
