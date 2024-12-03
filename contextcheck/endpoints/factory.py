@@ -4,10 +4,12 @@ from contextcheck.endpoints.endpoint_config import EndpointConfig, EndpointsEnum
 from contextcheck.endpoints.endpoint_dummy_echo import EndpointDummyEcho
 from contextcheck.endpoints.endpoint_openai_compatible import EndpointOpenAICompatible
 from contextcheck.endpoints.endpoint_tg_chatbot import EndpointTGChatBot
+from contextcheck.endpoints.endpoint_vertexai_compatible import EndpointVertexAICompatible
 
 ENDPOINT_MAPPING: dict[EndpointsEnum, EndpointBase] = {
     EndpointsEnum.OPENAI: EndpointOpenAICompatible,
     EndpointsEnum.OPENAI_COMPATIBLE: EndpointOpenAICompatible,
+    EndpointsEnum.VERTEXAI_COMPATIBLE: EndpointVertexAICompatible,
     EndpointsEnum.TG_CHATBOT: EndpointTGChatBot,
     EndpointsEnum.ECHO: EndpointDummyEcho,
     EndpointsEnum.CC_PROMPT_LLM: EndpointCC,

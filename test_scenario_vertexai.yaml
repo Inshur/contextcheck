@@ -1,0 +1,45 @@
+# Take the scenario config with a pinch of salt
+config:
+  endpoint_under_test:
+    kind: openai_compatible
+    provider: ChatVertexAI
+    model: gemini-pro
+    temperature: 0.2
+    max_tokens: 100
+    project: "inshur-dev0-hackathon1"
+    location: "us-central1"
+  eval_endpoint:
+    kind: openai
+    model: gpt-4
+    temperature: 0.0
+
+steps:
+  - name: Basic response test
+    request: 'Write only the word "success" as a response'
+    asserts:
+      - kind: contains
+        assertion: "success"
+      - eval: "response.stats.conn_duration < 10"
+
+  - name: Test factual knowledge
+    request: "What is the capital of France?"
+    asserts:
+      - kind: contains
+        assertion: "Paris"
+      - eval: "response.stats.tokens_total > 0"
+
+  - name: Test model grading QA evaluator
+    request:
+      message: "Please write a 5 line poem about artificial intelligence."
+    asserts:
+      - llm_metric: model-grading-qa
+        assertion: Text should be a poem about AI with exactly 5 lines.
+      - llm_metric: model-grading-qa
+        assertion: Text should contain metaphors or similes.
+
+  - name: Test temperature and creativity
+    request: "Generate a creative name for a tech startup"
+    asserts:
+      - eval: "len(response.message) > 0"
+      - llm_metric: model-grading-qa
+        assertion: Response should be a company name that is creative and technology-related.

@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 class EndpointsEnum(StrEnum):
     OPENAI = "openai"
     OPENAI_COMPATIBLE = "openai_compatible"
+    VERTEXAI_COMPATIBLE = "vertexai_compatible"
     TG_CHATBOT = "tg_chatbot"
     ECHO = "echo"
     CC_PROMPT_LLM = "cc_prompt_llm"
